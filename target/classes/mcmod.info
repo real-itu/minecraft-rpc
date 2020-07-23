@@ -1,0 +1,14 @@
+[
+    {
+        "modid": "minecraft_extended_commands",
+        "name": "Minecraft Extended Commands",
+        "version": "1.0",
+        "description": "Adding extra commands to help Python",
+        "dependencies": [
+            "spongeapi@7.2.0"
+        ],
+        "requiredMods": [
+            "spongeapi@7.2.0"
+        ]
+    }
+]
