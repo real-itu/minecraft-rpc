@@ -10,15 +10,15 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.text.Text;
-
+import java.util.UUID;
 
 public class DeleteTaggedAec implements CommandExecutor {
 	
     // private MinecraftExtendedCommands plugin;
     private Logger logger;
-    Map<Text, Entity> entity_dict;
+    Map<Text, UUID> entity_dict;
 
-    public DeleteTaggedAec(Logger logger, Map<Text, Entity> entity_dict) {
+    public DeleteTaggedAec(Logger logger, Map<Text, UUID> entity_dict) {
         this.logger = logger;
         this.entity_dict = entity_dict;
     }

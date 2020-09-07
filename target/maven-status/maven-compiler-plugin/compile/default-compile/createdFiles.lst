@@ -3,5 +3,6 @@ dk/itu_real/open_evolution/MinecraftExtendedCommands/command/GetBlockTypeAt.clas
 dk/itu_real/open_evolution/MinecraftExtendedCommands/command/DeleteAecTaggedBlock.class
 dk/itu_real/open_evolution/MinecraftExtendedCommands/command/GetTaggedAecCoordinate.class
 dk/itu_real/open_evolution/MinecraftExtendedCommands/command/AddAecAtCoordinate.class
+dk/itu_real/open_evolution/MinecraftExtendedCommands/command/BulkBlockSet.class
 mcmod.info
 dk/itu_real/open_evolution/MinecraftExtendedCommands/MinecraftExtendedCommands.class

@@ -14,13 +14,18 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import org.spongepowered.api.data.manipulator.mutable.entity.AreaEffectCloudData;
+import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
+
+import java.util.UUID;
+
 public class AddAecAtCoordinate implements CommandExecutor {
 	
     // private MinecraftExtendedCommands plugin;
     private Logger logger;
-    Map<Text, Entity> entity_dict;
+    Map<Text, UUID> entity_dict;
 
-    public AddAecAtCoordinate(Logger logger, Map<Text, Entity> entity_dict) {
+    public AddAecAtCoordinate(Logger logger, Map<Text, UUID> entity_dict) {
         this.logger = logger;
         this.entity_dict = entity_dict;
     }
@@ -38,10 +43,18 @@ public class AddAecAtCoordinate implements CommandExecutor {
         
         logger.debug("Received location " + location.toString());
         World world = location.getExtent();
-        Entity aec = world.createEntity(EntityTypes.AREA_EFFECT_CLOUD, location.getPosition());
-        entity_dict.put(Text.of(tag), aec);
         
-        src.sendMessage(Text.of("sucess!"));
+        Entity aec = world.createEntity(EntityTypes.AREA_EFFECT_CLOUD, location.getPosition());
+        
+        // AreaEffectCloudData aec_data = aec.get(AreaEffectCloudData.class).get();
+        // aec_data.duration().set(aec_data.duration().getMaxValue());
+        // aec.offer(aec_data.duration().set(aec_data.duration().getMaxValue()));
+        
+        world.spawnEntity(aec);
+        UUID aec_uuid = aec.getUniqueId();
+        entity_dict.put(Text.of(tag), aec_uuid);
+        
+        src.sendMessage(Text.of(aec_uuid.toString()));
         return CommandResult.success();
     }
 

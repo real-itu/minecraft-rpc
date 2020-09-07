@@ -11,6 +11,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.GetBlockTypeAt;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.GetTaggedAecCoordinate;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.AddAecAtCoordinate;
+import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.BulkBlockSet;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.DeleteTaggedAec;
 
 // Imports for logger
@@ -19,6 +20,7 @@ import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import org.spongepowered.api.entity.Entity;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 
@@ -30,7 +32,7 @@ public class MinecraftExtendedCommands {
     @Inject
     private Logger logger;
     
-    private Map<Text, Entity> entity_dict;
+    private Map<Text, UUID> entity_dict;
 
     /**
      * Called on server startup.
@@ -40,7 +42,7 @@ public class MinecraftExtendedCommands {
     @Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
 
-    	this.entity_dict = new HashMap<Text, Entity>();
+    	this.entity_dict = new HashMap<Text, UUID>();
     	
         // get_block_type command
         CommandSpec getBlockTypeCommand = CommandSpec.builder()
@@ -89,6 +91,16 @@ public class MinecraftExtendedCommands {
         
         // Register delete_tagged_aec
         this.game.getCommandManager().register(this, deleteEntityTag, "delete_tagged_aec");
+        
+        CommandSpec bulkSetBlock = CommandSpec.builder()
+        		.permission("extended_block_api_read")
+        		.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("json_package"))))
+        		.description(Text.of("Send a bulk of blocks and place them server-side"))
+        		.extendedDescription(Text.of("Send a bulk of blocks and place them server-side by sending a JSON string over MCRcon"))
+        		.executor(new BulkBlockSet(logger))
+        		.build();
+        
+        this.game.getCommandManager().register(this, bulkSetBlock, "bulk_set_block");
         
 
     }
