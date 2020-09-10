@@ -10,13 +10,16 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.GetBlockTypeAt;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.GetTaggedAecCoordinate;
+import foo.BlocksServer;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.AddAecAtCoordinate;
-import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.BulkBlockSet;
 import dk.itu_real.open_evolution.MinecraftExtendedCommands.command.DeleteTaggedAec;
 
 // Imports for logger
 import com.google.inject.Inject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.spongepowered.api.entity.Entity;
@@ -92,16 +95,14 @@ public class MinecraftExtendedCommands {
         // Register delete_tagged_aec
         this.game.getCommandManager().register(this, deleteEntityTag, "delete_tagged_aec");
         
-        CommandSpec bulkSetBlock = CommandSpec.builder()
-        		.permission("extended_block_api_read")
-        		.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("json_package"))))
-        		.description(Text.of("Send a bulk of blocks and place them server-side"))
-        		.extendedDescription(Text.of("Send a bulk of blocks and place them server-side by sending a JSON string over MCRcon"))
-        		.executor(new BulkBlockSet(logger))
-        		.build();
         
-        this.game.getCommandManager().register(this, bulkSetBlock, "bulk_set_block");
-        
+        // Run the block protobuf listener server
+        BlocksServer blocksServer = new BlocksServer(new CreateIncomingBlocks());
+        try {
+			ServerBuilder.forPort(5001).addService(blocksServer).build().start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
     }
 }
