@@ -1,4 +1,4 @@
-package dk.itu_real.open_evolution.MinecraftExtendedCommands.command;
+package dk.itu.real.ooe.command;
 
 
 
