@@ -1,23 +1,31 @@
 syntax = "proto3";
 package dk.itu.real.ooe;
 
-service Blocks {
-    rpc SetBatchBlocks (BatchBlockRequest) returns (BatchBlockReply) {
-    }
+service BlocksService {
+    rpc spawnBlocks (Blocks) returns (SpawnBlocksReply);
+    rpc readVolume (Volume) returns (Blocks);
 }
 
-message BatchBlockRequest {
-    repeated CoordinateBlockType blocks = 1;
+message Volume {
+    int32 x1 = 1;
+    int32 x2 = 2;
+    int32 y1 = 3;
+    int32 y2 = 4;
+    int32 z1 = 5;
+    int32 z2 = 6;
 }
 
-message CoordinateBlockType {
+message Blocks {
+    repeated Block blocks = 1;
+}
+
+message Block {
     int32 x = 1;
     int32 y = 2;
     int32 z = 3;
-    string btype = 4;
+    string type = 4;
 }
 
-// The response message containing the greetings
-message BatchBlockReply {
+message SpawnBlocksReply {
     string status = 1;
 }
