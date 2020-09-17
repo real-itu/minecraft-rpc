@@ -10,7 +10,9 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 
 import dk.itu.real.ooe.command.GetBlockTypeAt;
 import dk.itu.real.ooe.command.GetTaggedAecCoordinate;
+import dk.itu.real.ooe.handlers.SpawnBlocks;
 import io.grpc.ServerBuilder;
+import dk.itu.real.oee.services.BlocksServer;
 import dk.itu.real.ooe.command.AddAecAtCoordinate;
 import dk.itu.real.ooe.command.DeleteTaggedAec;
 
@@ -94,7 +96,7 @@ public class MinecraftExtendedCommands {
 
         // Run the block protobuf listener server
 
-        ServerBuilder.forPort(5001).addService(new BlocksService()).build().start();
+        ServerBuilder.forPort(5001).addService(new BlocksServer(new SpawnBlocks())).build().start();
         System.out.println("Listening on 5001");
     }
 }
