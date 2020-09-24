@@ -14,6 +14,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
 
+import javax.swing.text.html.HTMLDocument;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -71,5 +72,29 @@ public class BlocksService extends BlocksServiceImplBase {
                     responseObserver.onCompleted();
                 }
         ).name("readVolume").submit(plugin);
+    }
+
+    @Override
+    public void fillVolume(FillVolumeRequest request, StreamObserver<FillVolumeReply> responseObserver) {
+        Task.builder().execute(() -> {
+                    World world = Sponge.getServer().getWorlds().iterator().next();
+                    Volume v = request.getVolume();
+                    for (int x = v.getX1(); x <= v.getX2(); x++) {
+                        for (int y = v.getY1(); y <= v.getY2(); y++) {
+                            for (int z = v.getZ1(); z <= v.getZ2(); z++) {
+                                try {
+                                    Field typeField = BlockTypes.class.getField(request.getType());
+                                    world.setBlockType(x, y, z, (BlockType) typeField.get(null));
+                                } catch (NoSuchFieldException | IllegalAccessException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    }
+
+                    responseObserver.onNext(FillVolumeReply.newBuilder().setStatus("OK").build());
+                    responseObserver.onCompleted();
+                }
+        ).name("fillVolume").submit(plugin);
     }
 }

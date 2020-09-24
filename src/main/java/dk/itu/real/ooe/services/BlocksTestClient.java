@@ -11,6 +11,8 @@ import io.grpc.ManagedChannelBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dk.itu.real.ooe.BlocksOuterClass.Orientation.UP;
+
 public class BlocksTestClient {
 
 
@@ -22,7 +24,7 @@ public class BlocksTestClient {
         int y = 5;
         int z = 51;
         for (int i = 0; i < 100; i++) {
-            blocks.add(Block.newBuilder().setX(x).setY(y).setZ(z + i).setType("QUARTZ_BLOCK").build());
+            blocks.add(Block.newBuilder().setX(x).setY(y).setZ(z + i).setType("QUARTZ_BLOCK").setOrientation(UP).build());
         }
 
         SpawnBlocksReply reply = service.spawnBlocks(Blocks.newBuilder().addAllBlocks(blocks).build());
