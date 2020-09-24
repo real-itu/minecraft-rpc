@@ -23,24 +23,24 @@ message Blocks {
 message Block {
     int32 x = 1;
     int32 y = 2;
-    int32 z = 3;    
+    int32 z = 3;
     string type = 4;
     Orientation orientation = 5;
 }
 
 enum Orientation {
-    NORTH = 1;
-    WEST = 2;
-    SOUTH = 3;
-    EAST = 4;
-    UP = 5;
-    DOWN = 6;
+    NORTH = 0;
+    WEST = 1;
+    SOUTH = 2;
+    EAST = 3;
+    UP = 4;
+    DOWN = 5;
 }
 
 message SpawnBlocksReply {
     string status = 1;
 }
 
-message FillVolumeReply {
+message FillVolumeReply {
     string status = 1;
 }
