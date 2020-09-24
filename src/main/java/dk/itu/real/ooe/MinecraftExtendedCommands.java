@@ -27,7 +27,7 @@ public class MinecraftExtendedCommands {
      * @param event The server startup event
      */
     @Listener
-    public void onPreInitialization(GamePreInitializationEvent event) throws IOException {
+    public void onPreInitialization(GamePreInitializationEvent event) throws IOException, IllegalAccessException {
         PluginContainer plugin = game.getPluginManager().getPlugin("minecraft_extended_commands").get();
         ServerBuilder.forPort(5001).addService(new BlocksService(plugin)).build().start();
         logger.info("Listening on 5001");
