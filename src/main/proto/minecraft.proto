@@ -1,7 +1,8 @@
 syntax = "proto3";
 package dk.itu.real.ooe;
 
-service BlocksService {
+
+service MinecraftService {
     rpc spawnBlocks (Blocks) returns (SpawnBlocksReply);
     rpc readVolume (Volume) returns (Blocks);
     rpc fillVolume (FillVolumeRequest) returns (FillVolumeReply);

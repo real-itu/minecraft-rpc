@@ -1,7 +1,7 @@
 package dk.itu.real.ooe;
 
 import com.google.inject.Inject;
-import dk.itu.real.ooe.services.BlocksService;
+import dk.itu.real.ooe.services.MinecraftService;
 import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -14,8 +14,8 @@ import java.io.IOException;
 
 // Imports for logger
 
-@Plugin(id = "minecraft_extended_commands", name = "Minecraft Extended Commands", version = "1.0", description = "Adding extra commands to help Python")
-public class MinecraftExtendedCommands {
+@Plugin(id = "minecraft_rpc", name = "Minecraft RPC", version = "1.0", description = "A plugin for Sponge which lets you control Minecraft using gRPC.")
+public class MinecraftRPC {
     @Inject
     private Game game;
     @Inject
@@ -28,8 +28,8 @@ public class MinecraftExtendedCommands {
      */
     @Listener
     public void onPreInitialization(GamePreInitializationEvent event) throws IOException, IllegalAccessException {
-        PluginContainer plugin = game.getPluginManager().getPlugin("minecraft_extended_commands").get();
-        ServerBuilder.forPort(5001).addService(new BlocksService(plugin)).build().start();
+        PluginContainer plugin = game.getPluginManager().getPlugin("minecraft_rpc").get();
+        ServerBuilder.forPort(5001).addService(new MinecraftService(plugin)).build().start();
         logger.info("Listening on 5001");
     }
 }

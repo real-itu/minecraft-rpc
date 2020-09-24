@@ -1,9 +1,9 @@
 package dk.itu.real.ooe.services;
 
 
-import dk.itu.real.ooe.BlocksOuterClass;
-import dk.itu.real.ooe.BlocksOuterClass.*;
-import dk.itu.real.ooe.BlocksServiceGrpc.BlocksServiceImplBase;
+import dk.itu.real.ooe.Minecraft;
+import dk.itu.real.ooe.Minecraft.*;
+import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 
-public class BlocksService extends BlocksServiceImplBase {
+public class MinecraftService extends MinecraftServiceImplBase {
 
 
     private final PluginContainer plugin;
     private final Map<String, String> blockNamesToBlockTypes = new HashMap<>(); // minecraft:dirt --> DIRT
 
 
-    public BlocksService(PluginContainer plugin) throws IllegalAccessException {
+    public MinecraftService(PluginContainer plugin) throws IllegalAccessException {
         this.plugin = plugin;
 
         for (Field field : BlockTypes.class.getFields()) {
@@ -73,7 +73,7 @@ public class BlocksService extends BlocksServiceImplBase {
                                         .setX(x)
                                         .setY(y)
                                         .setZ(z)
-                                        .setType(BlocksOuterClass.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
+                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
                             }
                         }
                     }
