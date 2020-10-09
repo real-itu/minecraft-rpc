@@ -7,11 +7,11 @@
 
     <groupId>dk.itu.real.ooe</groupId>
     <artifactId>MinecraftRPC</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <name>Minecraft RPC</name>
     <description>A plugin for Sponge which lets you control Minecraft using gRPC.</description>
-    <url>https://github.com/djole/minecraft-extended-commands</url>
+    <url>https://github.com/real-itu/minecraft-rpc</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
