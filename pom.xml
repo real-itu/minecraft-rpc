@@ -7,7 +7,7 @@
 
     <groupId>dk.itu.real.ooe</groupId>
     <artifactId>minecraft-rpc</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <name>Minecraft RPC</name>
     <description>A plugin for Sponge which lets you control Minecraft using gRPC.</description>
@@ -128,10 +128,6 @@
                 <version>3.0.2</version>
             </plugin>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
             </plugin>
@@ -183,6 +179,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
