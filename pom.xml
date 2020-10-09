@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dk.itu.real.ooe</groupId>
-    <artifactId>MinecraftRPC</artifactId>
+    <artifactId>minecraft-rpc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>Minecraft RPC</name>
