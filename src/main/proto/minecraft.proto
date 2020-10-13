@@ -1,39 +1,53 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 package dk.itu.real.ooe;
 
-
+/**
+  The main service.
+*/
 service MinecraftService {
-    rpc spawnBlocks (Blocks) returns (SpawnBlocksReply);
-    rpc readVolume (Volume) returns (Blocks);
-    rpc fillVolume (FillVolumeRequest) returns (FillVolumeReply);
+    /** Spawn multiple blocks. */
+    rpc spawnBlocks (Blocks) returns (google.protobuf.Empty);
+
+    /** Return all blocks in a cube */
+    rpc readCube (Cube) returns (Blocks);
+
+    /** Fill a cube with a block type */
+    rpc fillCube (FillCubeRequest) returns (google.protobuf.Empty);
 }
 
-message Volume {
-    int32 x1 = 1;
-    int32 x2 = 2;
-    int32 y1 = 3;
-    int32 y2 = 4;
-    int32 z1 = 5;
-    int32 z2 = 6;
+/** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
+message Cube {
+    Point min = 1;
+    Point max = 2;
 }
 
-message FillVolumeRequest {
-    Volume volume = 1;
+/** A request to fill the cube with the block type */
+message FillCubeRequest {
+    Cube cube = 1;
     BlockType type = 2;
 }
 
+/** Multiple blocks */
 message Blocks {
     repeated Block blocks = 1;
 }
 
-message Block {
+/** A point in 3D space */
+message Point {
     int32 x = 1;
     int32 y = 2;
     int32 z = 3;
-    BlockType type = 4;
-    Orientation orientation = 5;
 }
 
+/** A single block */
+message Block {
+    Point position = 1;
+    BlockType type = 2;
+    Orientation orientation = 3;
+}
+
+/** An orientation in 3D space. */
 enum Orientation {
     NORTH = 0;
     WEST = 1;
@@ -43,15 +57,7 @@ enum Orientation {
     DOWN = 5;
 }
 
-message SpawnBlocksReply {
-    string status = 1;
-}
-
-message FillVolumeReply {
-    string status = 1;
-}
-
-
+/** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */
 enum BlockType {
     ACACIA_DOOR = 0;
     ACACIA_FENCE = 1;

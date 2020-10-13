@@ -1,6 +1,7 @@
 package dk.itu.real.ooe.services;
 
 
+import com.google.protobuf.Empty;
 import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
@@ -38,41 +39,44 @@ public class MinecraftService extends MinecraftServiceImplBase {
     }
 
     @Override
-    public void spawnBlocks(Blocks request, StreamObserver<SpawnBlocksReply> responseObserver) {
+    public void spawnBlocks(Blocks request, StreamObserver<Empty> responseObserver) {
         Task.builder().execute(() -> {
-                    List<Block> blocks = request.getBlocksList();
-
                     World world = Sponge.getServer().getWorlds().iterator().next();
-
-                    for (Block block : blocks) {
+                    for (Block block : request.getBlocksList()) {
                         try {
                             BlockType blockType = (BlockType) BlockTypes.class.getField(block.getType().toString()).get(null);
-                            world.setBlockType(block.getX(), block.getY(), block.getZ(), blockType);
+                            Point pos = block.getPosition();
+                            world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
                             //TODO set orientation from block.getOrientation()
                         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
                             throw new RuntimeException(e);
                         }
                     }
 
-                    responseObserver.onNext(SpawnBlocksReply.newBuilder().setStatus("OK").build());
+                    responseObserver.onNext(Empty.getDefaultInstance());
                     responseObserver.onCompleted();
                 }
         ).name("spawnBlocks").submit(plugin);
     }
 
     @Override
-    public void readVolume(Volume request, StreamObserver<Blocks> responseObserver) {
+    public void readCube(Cube cube, StreamObserver<Blocks> responseObserver) {
         Task.builder().execute(() -> {
                     Blocks.Builder builder = Blocks.newBuilder();
                     World world = Sponge.getServer().getWorlds().iterator().next();
-                    for (int x = request.getX1(); x <= request.getX2(); x++) {
-                        for (int y = request.getY1(); y <= request.getY2(); y++) {
-                            for (int z = request.getZ1(); z <= request.getZ2(); z++) {
+                    Point min = cube.getMin();
+                    Point max = cube.getMax();
+                    for (int x = min.getX(); x <= max.getX(); x++) {
+                        for (int y = min.getY(); y <= max.getY(); y++) {
+                            for (int z = min.getZ(); z <= max.getZ(); z++) {
                                 String name = world.getLocation(x, y, z).getBlock().getType().getName();
                                 builder.addBlocks(Block.newBuilder()
-                                        .setX(x)
-                                        .setY(y)
-                                        .setZ(z)
+                                        .setPosition(Point.newBuilder()
+                                                .setX(x)
+                                                .setY(y)
+                                                .setZ(z)
+                                                .build()
+                                        )
                                         .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
                             }
                         }
@@ -80,30 +84,35 @@ public class MinecraftService extends MinecraftServiceImplBase {
                     responseObserver.onNext(builder.build());
                     responseObserver.onCompleted();
                 }
-        ).name("readVolume").submit(plugin);
+        ).name("readCube").submit(plugin);
     }
 
     @Override
-    public void fillVolume(FillVolumeRequest request, StreamObserver<FillVolumeReply> responseObserver) {
+    public void fillCube(FillCubeRequest request, StreamObserver<Empty> responseObserver) {
         Task.builder().execute(() -> {
                     World world = Sponge.getServer().getWorlds().iterator().next();
-                    Volume v = request.getVolume();
-                    for (int x = v.getX1(); x <= v.getX2(); x++) {
-                        for (int y = v.getY1(); y <= v.getY2(); y++) {
-                            for (int z = v.getZ1(); z <= v.getZ2(); z++) {
-                                try {
-                                    Field typeField = BlockTypes.class.getField(request.getType().toString());
-                                    world.setBlockType(x, y, z, (BlockType) typeField.get(null));
-                                } catch (NoSuchFieldException | IllegalAccessException e) {
-                                    throw new RuntimeException(e);
-                                }
+                    Cube c = request.getCube();
+                    Point min = c.getMin();
+                    Point max = c.getMax();
+                    BlockType type;
+                    try {
+                        Field typeField = BlockTypes.class.getField(request.getType().toString());
+                        type = (BlockType) typeField.get(null);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    for (int x = min.getX(); x <= max.getX(); x++) {
+                        for (int y = min.getY(); y <= max.getY(); y++) {
+                            for (int z = min.getZ(); z <= max.getZ(); z++) {
+                                world.setBlockType(x, y, z, type);
                             }
                         }
                     }
 
-                    responseObserver.onNext(FillVolumeReply.newBuilder().setStatus("OK").build());
+                    responseObserver.onNext(Empty.getDefaultInstance());
                     responseObserver.onCompleted();
                 }
-        ).name("fillVolume").submit(plugin);
+        ).name("fillCube").submit(plugin);
     }
 }
