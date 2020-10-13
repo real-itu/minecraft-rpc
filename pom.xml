@@ -7,7 +7,7 @@
 
     <groupId>dk.itu.real.ooe</groupId>
     <artifactId>minecraft-rpc</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <name>Minecraft RPC</name>
     <description>A plugin for Sponge which lets you control Minecraft using gRPC.</description>
