@@ -23,4 +23,6 @@ This means it's working and the server is ready for commands on port 5001.
 
 The interface is defined using [gRPC](https://grpc.io). Read the definition at [src/main/proto/minecraft.proto](src/main/proto/minecraft.proto)
 
-Using the interface definition file you can generate clients for any programming language you like. See [https://grpc.io/docs/languages/](https://grpc.io/docs/languages/)
+See [clients](clients) for generated clients and examples
+
+Using the interface definition file you can generate clients for (almost) any programming language you like. See [https://grpc.io/docs/languages/](https://grpc.io/docs/languages/)
