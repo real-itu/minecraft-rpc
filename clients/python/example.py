@@ -16,7 +16,7 @@ response = client.readCube(Cube(min=Point(x=1, y=1, z=1), max=Point(x=2, y=3, z=
 print(response)
 
 response = client.fillCube(FillCubeRequest(
-    volume=Cube(min=Point(x=1, y=8, z=1), max=Point(x=2, y=9, z=3)),
+    cube=Cube(min=Point(x=1, y=8, z=1), max=Point(x=2, y=9, z=3)),
     type=OBSIDIAN
 ))
-print(response.status)
+print(response)
