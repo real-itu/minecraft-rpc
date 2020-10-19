@@ -7,16 +7,22 @@ import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class MinecraftService extends MinecraftServiceImplBase {
@@ -46,9 +52,12 @@ public class MinecraftService extends MinecraftServiceImplBase {
                         try {
                             BlockType blockType = (BlockType) BlockTypes.class.getField(block.getType().toString()).get(null);
                             Point pos = block.getPosition();
+                            Orientation orientation = block.getOrientation();
                             world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
-                            //TODO set orientation from block.getOrientation()
-                        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+                            if(blockType.getDefaultState().supports(Keys.DIRECTION)){
+                                setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
+                            }
+                        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -114,5 +123,20 @@ public class MinecraftService extends MinecraftServiceImplBase {
                     responseObserver.onCompleted();
                 }
         ).name("fillCube").submit(plugin);
+    }
+
+    public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalAccessException{
+        Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
+        if (!optionalData.isPresent()) {
+            throw new IllegalAccessException("Failed to get block location data");
+        }
+        DirectionalData data = optionalData.get();
+        data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
+        BlockState state = btype.getDefaultState();
+        Optional<BlockState> newState = state.with(data.asImmutable());
+        if (!optionalData.isPresent()) {
+            throw new IllegalAccessException("block type " + btype.toString() + " failed to set orientation!");
+        }
+        blockLoc.setBlock(newState.get());
     }
 }
