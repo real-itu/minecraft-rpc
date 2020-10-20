@@ -57,7 +57,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
                             if(blockType.getDefaultState().supports(Keys.DIRECTION)){
                                 setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
                             }
-                        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
+                        } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -125,17 +125,17 @@ public class MinecraftService extends MinecraftServiceImplBase {
         ).name("fillCube").submit(plugin);
     }
 
-    public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalAccessException{
+    public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
         Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
         if (!optionalData.isPresent()) {
-            throw new IllegalAccessException("Failed to get block location data");
+            throw new IllegalStateException("Failed to get block location data");
         }
         DirectionalData data = optionalData.get();
         data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
         BlockState state = btype.getDefaultState();
         Optional<BlockState> newState = state.with(data.asImmutable());
-        if (!optionalData.isPresent()) {
-            throw new IllegalAccessException("block type " + btype.toString() + " failed to set orientation!");
+        if (!newState.isPresent()) {
+            throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
         }
         blockLoc.setBlock(newState.get());
     }
