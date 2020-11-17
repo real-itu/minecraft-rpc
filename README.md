@@ -4,6 +4,8 @@ A [gRPC](https://grpc.io) interface for Minecraft
 ### Starting the modded Minecraft server
 
 * Install Java 1.8 (You can check your version with `java -version`)
+  * unix: `sudo apt-get install openjdk-8-jre`
+  * osx: [mkyong.com/java/how-to-install-java-on-mac-osx](https://mkyong.com/java/how-to-install-java-on-mac-osx/)  
 * Create a folder `minecraft-rpc`
 * Download the latest stable [spongevanilla 1.12.2](https://www.spongepowered.org/downloads/spongevanilla/stable/1.12.2) into `minecraft-rpc` 
 * Download the latest [minecraft-rpc jar](https://github.com/real-itu/minecraft-rpc/packages/434436) into `minecraft-rpc/mods`
