@@ -54,11 +54,15 @@ public class MinecraftService extends MinecraftServiceImplBase {
                             Point pos = block.getPosition();
                             Orientation orientation = block.getOrientation();
                             world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
-                            if(blockType.getDefaultState().supports(Keys.DIRECTION)){
-                                setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
+                            try {
+                                if (blockType.getDefaultState().supports(Keys.DIRECTION)) {
+                                    setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
+                                }
+                            }catch (IllegalStateException e){
+                                System.err.println(e.getMessage());
                             }
                         } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
-                            throw new RuntimeException(e);
+                            System.err.println(e.getMessage());
                         }
                     }
 
