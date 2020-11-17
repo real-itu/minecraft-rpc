@@ -20,7 +20,6 @@ import org.spongepowered.api.world.World;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -54,15 +53,11 @@ public class MinecraftService extends MinecraftServiceImplBase {
                             Point pos = block.getPosition();
                             Orientation orientation = block.getOrientation();
                             world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
-                            try {
-                                if (blockType.getDefaultState().supports(Keys.DIRECTION)) {
-                                    setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
-                                }
-                            }catch (IllegalStateException e){
-                                System.err.println(e.getMessage());
+                            if (blockType.getDefaultState().supports(Keys.DIRECTION)) {
+                                setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
                             }
-                        } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
-                            System.err.println(e.getMessage());
+                        } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ){
+                            this.plugin.getLogger().info(e.getMessage());
                         }
                     }
 
