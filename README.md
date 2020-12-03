@@ -40,7 +40,7 @@ There are three methods at the core of the API: `spawnBlocks` spawns a set of di
 
 Here's an [example](clients/python/example.py) on how to spawn a flying machine with python:
 
-```
+```python
 import grpc
 
 import minecraft_pb2_grpc
@@ -73,7 +73,7 @@ client.spawnBlocks(Blocks(blocks=[  # Spawn a flying machine
 
 To read the blocks present within a set of coordinates use `readCube`:
 
-```
+```python
 import grpc
 
 import minecraft_pb2_grpc
@@ -114,5 +114,7 @@ You can use the method `client.readCube` that allows to read which blocks are sp
    4. On `Server Address` write `localhost` 
    5. `Join Server`
 
+
+### Et voilà:
 
 ![](example.gif)
