@@ -26,3 +26,11 @@ client.spawnBlocks(Blocks(blocks=[  # Spawn a flying machine
     # Activate
     Block(position=Point(x=1, y=6, z=-1), type=QUARTZ_BLOCK, orientation=NORTH),
 ]))
+
+
+blocks = client.readCube(Cube(
+    min=Point(x=1, y=5, z=-4),
+    max=Point(x=1, y=6, z=1)
+))
+
+# print(blocks)
