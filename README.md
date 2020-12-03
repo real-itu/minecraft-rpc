@@ -71,7 +71,7 @@ client.spawnBlocks(Blocks(blocks=[  # Spawn a flying machine
 ]))
 ```
 
-To read the blocks present within a set of coordinates use:
+To read the blocks present within a set of coordinates use `readCube`:
 
 ```
 import grpc
