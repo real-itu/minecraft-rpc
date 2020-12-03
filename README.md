@@ -1,5 +1,11 @@
 # Minecraft RPC
-A Python interface for Minecraft built on [gRPC](https://grpc.io)
+A Python interface for Minecraft built on [gRPC](https://grpc.io)   
+<br />
+
+<p align="center">
+  <img src="examples.gif">
+</p>  
+<br /><br />
 
 ### 1. Installing the modded Minecraft server
 
@@ -117,4 +123,3 @@ You can use the method `client.readCube` that allows to read which blocks are sp
 
 ### Et voilà:
 
-![](example.gif)
