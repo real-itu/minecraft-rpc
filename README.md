@@ -3,7 +3,7 @@ A Python interface for Minecraft built on [gRPC](https://grpc.io)
 <br />
 
 <p align="center">
-  <img src="examples.gif">
+  <img src="example.gif">
 </p>  
 <br /><br />
 
