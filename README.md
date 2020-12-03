@@ -2,11 +2,6 @@
 A Python interface for Minecraft built on [gRPC](https://grpc.io)   
 <br />
 
-<p align="center">
-  <img src="example.gif">
-</p>  
-<br /><br />
-
 ### 1. Installing the modded Minecraft server
 
 1. Install Java 1.8 (You can check your version with `java -version`)
@@ -123,3 +118,7 @@ You can use the method `client.readCube` that allows to read which blocks are sp
 
 ### Et voilà:
 
+<p align="center">
+  <img src="example.gif">
+</p>  
+<br /><br />
