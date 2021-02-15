@@ -146,8 +146,6 @@ public class MinecraftService extends MinecraftServiceImplBase {
             World world = Sponge.getServer().getWorlds().iterator().next();
             for (dk.itu.real.ooe.Minecraft.SpawnEntity entity : request.getSpawnEntitiesList()) {
                 try {
-                    boolean ok = world.loadChunk(new Vector3i(entity.getSpawnPosition().getX(), 0, entity.getSpawnPosition().getZ()), true).get().loadChunk(true);
-                    System.out.println(ok);
                     org.spongepowered.api.entity.EntityType entityType = (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(entity.getType().toString().split("_", 2)[1]).get(null);
                     Point pos = entity.getSpawnPosition();
                     org.spongepowered.api.entity.Entity newEntity = world.createEntity(entityType, new Vector3d(pos.getX(), pos.getY(), pos.getZ()));
