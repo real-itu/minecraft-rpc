@@ -21,10 +21,8 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.Chunk;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import org.spongepowered.api.world.ChunkTicketManager;
 
 
 
@@ -34,7 +32,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
 
 
 public class MinecraftService extends MinecraftServiceImplBase {
