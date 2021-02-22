@@ -16,6 +16,8 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
+import org.spongepowered.api.data.manipulator.mutable.block.ConnectedDirectionData;
+import org.spongepowered.api.data.manipulator.mutable.block.AttachedData;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
@@ -219,13 +221,20 @@ public class MinecraftService extends MinecraftServiceImplBase {
 
     public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
         Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
+        Optional<AttachedData> ad = blockLoc.get(AttachedData.class);
+        if(ad.isPresent()){
+            System.out.println("AttachedData");
+        }
+        AttachedData ad_data = ad.get();
+        ad_data.set(Keys.ATTACHED, true);
         if (!optionalData.isPresent()) {
             throw new IllegalStateException("Failed to get block location data");
         }
         DirectionalData data = optionalData.get();
         data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
         BlockState state = btype.getDefaultState();
-        Optional<BlockState> newState = state.with(data.asImmutable());
+        Optional<BlockState> newState = state.with(ad_data.asImmutable());
+        //Optional<BlockState> newState = state.with(data.asImmutable());
         if (!newState.isPresent()) {
             throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
         }
