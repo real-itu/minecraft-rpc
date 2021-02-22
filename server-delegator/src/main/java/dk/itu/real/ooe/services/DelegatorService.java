@@ -1,4 +1,6 @@
 package dk.itu.real.ooe.services;
 
-public class DelegatorService {
+import dk.itu.real.ooe.DelegatorService.DelegatorServiceImplBase;
+
+public class DelegatorService extends DelegatorServiceImplBase {
 }

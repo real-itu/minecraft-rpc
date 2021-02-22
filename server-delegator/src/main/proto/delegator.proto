@@ -7,10 +7,14 @@ package dk.itu.real.ooe;
 */
 service DelegatorService {
     /** Spawns a server **/
-    rpc spawnServer (seed) returns (google.protobuf.Empty);
+    rpc spawnServer (Seed) returns (google.protobuf.Empty);
 }
 
-/** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
+/** The port that a new service is tied to */
 message Port {
-    String port = 1;
+    string port = 1;
+}
+
+message Seed {
+  int32 seed = 1;
 }
