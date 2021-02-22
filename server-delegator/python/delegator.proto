@@ -1,0 +1,15 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+/**
+  The main service.
+*/
+service DelegatorService {
+    /** Spawns a server **/
+    rpc spawnServer (Port) returns (Port);
+}
+
+/** The port that a new service is tied to */
+message Port {
+    string port = 1;
+}
