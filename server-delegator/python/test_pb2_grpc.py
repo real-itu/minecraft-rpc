@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import delegator_pb2 as delegator__pb2
+import test_pb2 as test__pb2
 
 
 class DelegatorStub(object):
@@ -14,17 +14,17 @@ class DelegatorStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SpawnNewServer = channel.unary_unary(
-                '/Delegator/SpawnNewServer',
-                request_serializer=delegator__pb2.ServerConfig.SerializeToString,
-                response_deserializer=delegator__pb2.Port.FromString,
+        self.GetColorOf = channel.unary_unary(
+                '/Delegator/GetColorOf',
+                request_serializer=test__pb2.Block.SerializeToString,
+                response_deserializer=test__pb2.Color.FromString,
                 )
 
 
 class DelegatorServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SpawnNewServer(self, request, context):
+    def GetColorOf(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,10 +33,10 @@ class DelegatorServicer(object):
 
 def add_DelegatorServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SpawnNewServer': grpc.unary_unary_rpc_method_handler(
-                    servicer.SpawnNewServer,
-                    request_deserializer=delegator__pb2.ServerConfig.FromString,
-                    response_serializer=delegator__pb2.Port.SerializeToString,
+            'GetColorOf': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetColorOf,
+                    request_deserializer=test__pb2.Block.FromString,
+                    response_serializer=test__pb2.Color.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -49,7 +49,7 @@ class Delegator(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SpawnNewServer(request,
+    def GetColorOf(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class Delegator(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Delegator/SpawnNewServer',
-            delegator__pb2.ServerConfig.SerializeToString,
-            delegator__pb2.Port.FromString,
+        return grpc.experimental.unary_unary(request, target, '/Delegator/GetColorOf',
+            test__pb2.Block.SerializeToString,
+            test__pb2.Color.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
