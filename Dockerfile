@@ -8,3 +8,4 @@ FROM openjdk:8-jdk-alpine
 WORKDIR /server
 COPY server-base .
 COPY --from=builder src/target/minecraft-rpc-0.0.5.jar mods/
+CMD java -jar spongevanilla-1.12.2-7.3.0.jar

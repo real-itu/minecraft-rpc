@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x64\x65legator.proto\"W\n\x0cServerConfig\x12\x13\n\x04port\x18\x01 \x01(\x0b\x32\x05.Port\x12\x1d\n\tworldType\x18\x02 \x01(\x0e\x32\n.WorldType\x12\x13\n\x0b\x61mountOfRam\x18\x03 \x01(\x05\"\x14\n\x04Port\x12\x0c\n\x04port\x18\x01 \x01(\x05*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32\x35\n\tDelegator\x12(\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x05.Port\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0f\x64\x65legator.proto\"P\n\x0cServerConfig\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\x1d\n\tworldType\x18\x02 \x01(\x0e\x32\n.WorldType\x12\x13\n\x0b\x61mountOfRam\x18\x03 \x01(\x05\"\x14\n\x04Port\x12\x0c\n\x04port\x18\x01 \x01(\x05*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32\x35\n\tDelegator\x12(\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x05.Port\"\x00\x62\x06proto3'
 )
 
 _WORLDTYPE = _descriptor.EnumDescriptor(
@@ -43,8 +43,8 @@ _WORLDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=130,
-  serialized_end=164,
+  serialized_start=123,
+  serialized_end=157,
 )
 _sym_db.RegisterEnumDescriptor(_WORLDTYPE)
 
@@ -64,8 +64,8 @@ _SERVERCONFIG = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='port', full_name='ServerConfig.port', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -96,7 +96,7 @@ _SERVERCONFIG = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=106,
+  serialized_end=99,
 )
 
 
@@ -127,11 +127,10 @@ _PORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=108,
-  serialized_end=128,
+  serialized_start=101,
+  serialized_end=121,
 )
 
-_SERVERCONFIG.fields_by_name['port'].message_type = _PORT
 _SERVERCONFIG.fields_by_name['worldType'].enum_type = _WORLDTYPE
 DESCRIPTOR.message_types_by_name['ServerConfig'] = _SERVERCONFIG
 DESCRIPTOR.message_types_by_name['Port'] = _PORT
@@ -161,8 +160,8 @@ _DELEGATOR = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=166,
-  serialized_end=219,
+  serialized_start=159,
+  serialized_end=212,
   methods=[
   _descriptor.MethodDescriptor(
     name='SpawnNewServer',

@@ -7,7 +7,7 @@ service Delegator {
 }
 
 message ServerConfig {
-    Port port = 1;
+    int32 port = 1;
     WorldType worldType = 2;
     int32 amountOfRam = 3;
 }
