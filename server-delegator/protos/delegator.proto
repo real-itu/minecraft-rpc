@@ -1,0 +1,22 @@
+/**py -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/delegator.proto*/
+
+syntax = "proto3";
+
+service Delegator {
+    rpc SpawnNewServer(ServerConfig) returns (Port) {}
+}
+
+message ServerConfig {
+    Port port = 1;
+    WorldType worldType = 2;
+    int32 amountOfRam = 3;
+}
+
+message Port {
+    int32 port = 1;
+}
+
+enum WorldType {
+    FLAT = 0;
+    DEFAULT = 1;
+}
