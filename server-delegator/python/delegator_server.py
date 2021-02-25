@@ -11,8 +11,11 @@ import delegator_pb2
 import delegator_pb2_grpc
 
 docker_client = docker.from_env()
-imageName = "fred5229/evocraft_minecraft_server:default"
-docker_client.images.pull(imageName)
+defaultImage = "fred5229/evocraft_minecraft_server:default"
+flatImage = "fred5229/evocraft_minecraft_server:flat"
+docker_client.images.pull(defaultImage)
+docker_client.images.pull(flatImage)
+
 
 
 class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
@@ -22,6 +25,11 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
         sock.bind(('',0))
         _, port = sock.getsockname()
         sock.close()
+        imageName = ''
+        if request.worldType == delegator_pb2.WorldType.FLAT:
+            imageName = flatImage
+        elif request.worldType == delegator_pb2.WorldType.DEFAULT:
+            imageName = defaultImage
         container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(port), '25565/tcp':'25565'})
         portMessage = delegator_pb2.Port(port=port)
         return portMessage
