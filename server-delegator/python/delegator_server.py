@@ -4,6 +4,7 @@ import math
 import logging
 import docker
 import socket
+import re
 
 import grpc
 
@@ -31,6 +32,9 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
         elif request.worldType == delegator_pb2.WorldType.DEFAULT:
             imageName = defaultImage
         container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(port), '25565/tcp':'25565'})
+        regex = ".*Done\ \(.*\)\!\ For\ help.*"
+        while(not re.search(regex, str(container.logs()))):
+            pass
         portMessage = delegator_pb2.Port(port=port)
         return portMessage
 
