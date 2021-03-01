@@ -54,7 +54,8 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    #server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor())
     delegator_pb2_grpc.add_DelegatorServicer_to_server(
         DelegatorServicer(), server)
     server.add_insecure_port('[::]:5001')
