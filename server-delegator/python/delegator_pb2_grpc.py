@@ -17,7 +17,7 @@ class DelegatorStub(object):
         self.SpawnNewServer = channel.unary_unary(
                 '/Delegator/SpawnNewServer',
                 request_serializer=delegator__pb2.ServerConfig.SerializeToString,
-                response_deserializer=delegator__pb2.Port.FromString,
+                response_deserializer=delegator__pb2.Ports.FromString,
                 )
 
 
@@ -36,7 +36,7 @@ def add_DelegatorServicer_to_server(servicer, server):
             'SpawnNewServer': grpc.unary_unary_rpc_method_handler(
                     servicer.SpawnNewServer,
                     request_deserializer=delegator__pb2.ServerConfig.FromString,
-                    response_serializer=delegator__pb2.Port.SerializeToString,
+                    response_serializer=delegator__pb2.Ports.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -61,6 +61,6 @@ class Delegator(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Delegator/SpawnNewServer',
             delegator__pb2.ServerConfig.SerializeToString,
-            delegator__pb2.Port.FromString,
+            delegator__pb2.Ports.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -3,7 +3,8 @@
 syntax = "proto3";
 
 service Delegator {
-    rpc SpawnNewServer(ServerConfig) returns (Port) {}
+    rpc SpawnNewServer(ServerConfig) returns (Ports) {}
+    rpc CloseServer(Port) return (google.protobuf.empty) {}
 }
 
 message ServerConfig {
@@ -12,8 +13,13 @@ message ServerConfig {
     int32 amountOfRam = 3;
 }
 
+message Ports {
+    int32 rpcPort = 1;
+    int32 mcPort = 2;
+}
+
 message Port {
-    int32 port = 1;
+    int32 port;
 }
 
 enum WorldType {

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x64\x65legator.proto\"P\n\x0cServerConfig\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\x1d\n\tworldType\x18\x02 \x01(\x0e\x32\n.WorldType\x12\x13\n\x0b\x61mountOfRam\x18\x03 \x01(\x05\"\x14\n\x04Port\x12\x0c\n\x04port\x18\x01 \x01(\x05*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32\x35\n\tDelegator\x12(\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x05.Port\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0f\x64\x65legator.proto\"P\n\x0cServerConfig\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\x1d\n\tworldType\x18\x02 \x01(\x0e\x32\n.WorldType\x12\x13\n\x0b\x61mountOfRam\x18\x03 \x01(\x05\"(\n\x05Ports\x12\x0f\n\x07rpcPort\x18\x01 \x01(\x05\x12\x0e\n\x06mcPort\x18\x02 \x01(\x05*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32\x36\n\tDelegator\x12)\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x06.Ports\"\x00\x62\x06proto3'
 )
 
 _WORLDTYPE = _descriptor.EnumDescriptor(
@@ -43,8 +43,8 @@ _WORLDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=123,
-  serialized_end=157,
+  serialized_start=143,
+  serialized_end=177,
 )
 _sym_db.RegisterEnumDescriptor(_WORLDTYPE)
 
@@ -100,17 +100,24 @@ _SERVERCONFIG = _descriptor.Descriptor(
 )
 
 
-_PORT = _descriptor.Descriptor(
-  name='Port',
-  full_name='Port',
+_PORTS = _descriptor.Descriptor(
+  name='Ports',
+  full_name='Ports',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='port', full_name='Port.port', index=0,
+      name='rpcPort', full_name='Ports.rpcPort', index=0,
       number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='mcPort', full_name='Ports.mcPort', index=1,
+      number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -128,12 +135,12 @@ _PORT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=101,
-  serialized_end=121,
+  serialized_end=141,
 )
 
 _SERVERCONFIG.fields_by_name['worldType'].enum_type = _WORLDTYPE
 DESCRIPTOR.message_types_by_name['ServerConfig'] = _SERVERCONFIG
-DESCRIPTOR.message_types_by_name['Port'] = _PORT
+DESCRIPTOR.message_types_by_name['Ports'] = _PORTS
 DESCRIPTOR.enum_types_by_name['WorldType'] = _WORLDTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -144,12 +151,12 @@ ServerConfig = _reflection.GeneratedProtocolMessageType('ServerConfig', (_messag
   })
 _sym_db.RegisterMessage(ServerConfig)
 
-Port = _reflection.GeneratedProtocolMessageType('Port', (_message.Message,), {
-  'DESCRIPTOR' : _PORT,
+Ports = _reflection.GeneratedProtocolMessageType('Ports', (_message.Message,), {
+  'DESCRIPTOR' : _PORTS,
   '__module__' : 'delegator_pb2'
-  # @@protoc_insertion_point(class_scope:Port)
+  # @@protoc_insertion_point(class_scope:Ports)
   })
-_sym_db.RegisterMessage(Port)
+_sym_db.RegisterMessage(Ports)
 
 
 
@@ -160,8 +167,8 @@ _DELEGATOR = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=159,
-  serialized_end=212,
+  serialized_start=179,
+  serialized_end=233,
   methods=[
   _descriptor.MethodDescriptor(
     name='SpawnNewServer',
@@ -169,7 +176,7 @@ _DELEGATOR = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_SERVERCONFIG,
-    output_type=_PORT,
+    output_type=_PORTS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

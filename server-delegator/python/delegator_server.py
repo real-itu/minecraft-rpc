@@ -14,17 +14,29 @@ docker_client = docker.from_env()
 imageName = "fred5229/evocraft_minecraft_server:default"
 docker_client.images.pull(imageName)
 
+containers = {}
+
 
 class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
     def SpawnNewServer(self, request, context):
         docker_client = docker.from_env()
-        sock = socket.socket()
-        sock.bind(('',0))
-        _, port = sock.getsockname()
-        sock.close()
-        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(port), '25565/tcp':'25565'})
-        portMessage = delegator_pb2.Port(port=port)
+        rpcSock = socket.socket()
+        mcSock = socket.socket()
+        rpcSock.bind(('',0))
+        mcSock.bind(('',0))
+        _, rpcPort = rpcSock.getsockname()
+        _, mcPort = mcSock.getsockname()
+        rpcSock.close()
+        mcSock.close()
+        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(rpcPort), '25565/tcp':str(mcPort)})
+        containers[rpcPort] = container
+
+        portMessage = delegator_pb2.Ports(rpcPort=rpcPort, mcPort=mcPort)
         return portMessage
+
+    def CloseServer(self, request, context):
+        containers[request.port].close()
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
