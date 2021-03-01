@@ -4,7 +4,7 @@ syntax = "proto3";
 
 service Delegator {
     rpc SpawnNewServer(ServerConfig) returns (Ports) {}
-    rpc CloseServer(Port) return (google.protobuf.empty) {}
+    rpc CloseServer(Port) returns (Empty) {}
 }
 
 message ServerConfig {
@@ -19,7 +19,11 @@ message Ports {
 }
 
 message Port {
-    int32 port;
+    int32 port = 1;
+}
+
+message Empty {
+
 }
 
 enum WorldType {

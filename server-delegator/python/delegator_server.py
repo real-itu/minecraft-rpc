@@ -7,8 +7,10 @@ import socket
 
 import grpc
 
+
 import delegator_pb2
 import delegator_pb2_grpc
+
 
 docker_client = docker.from_env()
 defaultImage = "fred5229/evocraft_minecraft_server:default"
@@ -22,22 +24,30 @@ containers = {}
 
 class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
     def SpawnNewServer(self, request, context):
-        docker_client = docker.from_env()
-        sock = socket.socket()
-        sock.bind(('',0))
-        _, port = sock.getsockname()
-        sock.close()
+
+        rpcSock = socket.socket()
+        mcSock = socket.socket()
+        rpcSock.bind(('',0))
+        mcSock.bind(('',0))
+        _, rpcPort1 = rpcSock.getsockname()
+        _, mcPort1 = mcSock.getsockname()
+        rpcSock.close()
+        mcSock.close()
+
         imageName = ''
         if request.worldType == delegator_pb2.WorldType.FLAT:
             imageName = flatImage
         elif request.worldType == delegator_pb2.WorldType.DEFAULT:
             imageName = defaultImage
-        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(port), '25565/tcp':'25565'})
-        portMessage = delegator_pb2.Port(port=port)
+        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(rpcPort1), '25565/tcp':str(mcPort1)})
+        containers[rpcPort1] = container
+
+        portMessage = delegator_pb2.Ports(rpcPort=rpcPort1, mcPort=mcPort1)
         return portMessage
 
     def CloseServer(self, request, context):
-        containers[request.port].close()
+        containers[request.port].stop()
+        return delegator_pb2.Empty()
 
 
 def serve():
