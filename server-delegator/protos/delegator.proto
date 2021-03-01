@@ -8,9 +8,7 @@ service Delegator {
 }
 
 message ServerConfig {
-    int32 port = 1;
-    WorldType worldType = 2;
-    int32 amountOfRam = 3;
+    WorldType worldType = 1;
 }
 
 message Ports {

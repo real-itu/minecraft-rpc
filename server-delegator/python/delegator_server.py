@@ -29,8 +29,8 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
         mcSock = socket.socket()
         rpcSock.bind(('',0))
         mcSock.bind(('',0))
-        _, rpcPort1 = rpcSock.getsockname()
-        _, mcPort1 = mcSock.getsockname()
+        _, rpcPort = rpcSock.getsockname()
+        _, mcPort = mcSock.getsockname()
         rpcSock.close()
         mcSock.close()
 
@@ -39,10 +39,10 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
             imageName = flatImage
         elif request.worldType == delegator_pb2.WorldType.DEFAULT:
             imageName = defaultImage
-        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(rpcPort1), '25565/tcp':str(mcPort1)})
-        containers[rpcPort1] = container
+        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(rpcPort), '25565/tcp':str(mcPort)})
+        containers[rpcPort] = container
 
-        portMessage = delegator_pb2.Ports(rpcPort=rpcPort1, mcPort=mcPort1)
+        portMessage = delegator_pb2.Ports(rpcPort=rpcPort, mcPort=mcPort)
         return portMessage
 
     def CloseServer(self, request, context):
