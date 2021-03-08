@@ -1,7 +1,6 @@
 from __future__ import print_function
 
-import random
-import logging
+import time
 
 import grpc
 
@@ -12,6 +11,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
+ip = "18.197.150.76"
 
 #The lag machine itself
 def getListOfLagMachinesOnY(x, y, z):
@@ -67,7 +67,7 @@ def spawnLagMachineChunkOnServer(servers, posX, posY, posZ):
     i = 0
     while i < len(servers):
         #Establish connection to spawned server
-        server_channel = grpc.insecure_channel('localhost:'+str(servers[i].rpcPort))
+        server_channel = grpc.insecure_channel(ip+':'+str(servers[i].rpcPort))
         server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
 
         #Spawn lag machine on server
@@ -75,7 +75,18 @@ def spawnLagMachineChunkOnServer(servers, posX, posY, posZ):
         server_client.spawnBlocks(Blocks(blocks=blocks))
         i +=1
     
+def sendCommand(server, cmd):
+    server_channel = grpc.insecure_channel(ip+':'+str(server.rpcPort))
+    server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
 
+    server_client.executeCommands(Commands(commands=[
+        Command(command=cmd)
+    ]))
+
+
+#---------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------#
 
 posX = int(input("Where do you want your lag machine chunk? format: x ENTER y ENTER z ENTER\n"))
 posY = int(input())
@@ -86,10 +97,19 @@ amountOfServers = int(input("How many servers do you want duplicated with these 
 print("Processing ...")
 
 #Make docker
-channel = grpc.insecure_channel('localhost:5001')
+channel = grpc.insecure_channel(ip+':5001')
 client = delegator_pb2_grpc.DelegatorStub(channel)
 
 servers = []
 servers = spawnServers(client, amountOfServers)
 
+#for server in servers:
+#    sendCommand(server, "spark ")
+
 spawnLagMachineChunkOnServer(servers, posX, posY, posZ)
+
+
+while 1:
+    time.sleep(5)
+    for server in servers:
+        sendCommand(server, "sponge tps")

@@ -12,6 +12,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
+ip = "52.29.166.72"
 
 #Returns single layer of entities
 def getSingleLayerOfEntities(x, y, z, size):
@@ -72,7 +73,7 @@ def spawnEntityChunkOnServer(servers, posX, posY, posZ, size):
     i = 0
     while i < len(servers):
         #Establish connection to spawned server
-        server_channel = grpc.insecure_channel('localhost:'+str(servers[i].rpcPort))
+        server_channel = grpc.insecure_channel(ip+':'+str(servers[i].rpcPort))
         server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
 
         #Spawn lag machine on server
@@ -81,6 +82,18 @@ def spawnEntityChunkOnServer(servers, posX, posY, posZ, size):
         server_client.spawnEntities(SpawnEntities(spawnEntities=entities))
         i +=1
     
+def sendCommand(server, cmd):
+    server_channel = grpc.insecure_channel(ip+':'+str(server.rpcPort))
+    server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
+
+    server_client.executeCommands(Commands(commands=[
+        Command(command=cmd)
+    ]))
+
+
+#---------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------#
 
 
 posX = int(input("Where do you want your entity chunk? format: x ENTER y ENTER z ENTER\n"))
@@ -93,10 +106,21 @@ amountOfServers = int(input("How many servers do you want duplicated with these 
 print("Processing ...")
 
 #Make docker
-channel = grpc.insecure_channel('localhost:5001')
+channel = grpc.insecure_channel(ip+':5001')
 client = delegator_pb2_grpc.DelegatorStub(channel)
 
 servers = []
 servers = spawnServers(client, amountOfServers)
-
+for server in servers:
+    sendCommand(server, "spark profiler")
 spawnEntityChunkOnServer(servers, posX, posY, posZ, size)
+
+input("Press for health report")
+for server in servers:
+    sendCommand(server, "spark healthreport")
+
+while 1:
+    input("Press for timings")
+    for server in servers:
+        sendCommand(server, "spark profiler --stop")
+
