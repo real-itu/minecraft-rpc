@@ -47,6 +47,11 @@ class MinecraftServiceStub(object):
                 request_serializer=minecraft__pb2.Sphere.SerializeToString,
                 response_deserializer=minecraft__pb2.Entities.FromString,
                 )
+        self.executeCommands = channel.unary_unary(
+                '/dk.itu.real.ooe.MinecraftService/executeCommands',
+                request_serializer=minecraft__pb2.Commands.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
 
 
 class MinecraftServiceServicer(object):
@@ -95,6 +100,12 @@ class MinecraftServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def executeCommands(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MinecraftServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -127,6 +138,11 @@ def add_MinecraftServiceServicer_to_server(servicer, server):
                     servicer.readEntitiesInSphere,
                     request_deserializer=minecraft__pb2.Sphere.FromString,
                     response_serializer=minecraft__pb2.Entities.SerializeToString,
+            ),
+            'executeCommands': grpc.unary_unary_rpc_method_handler(
+                    servicer.executeCommands,
+                    request_deserializer=minecraft__pb2.Commands.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -239,5 +255,22 @@ class MinecraftService(object):
         return grpc.experimental.unary_unary(request, target, '/dk.itu.real.ooe.MinecraftService/readEntitiesInSphere',
             minecraft__pb2.Sphere.SerializeToString,
             minecraft__pb2.Entities.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def executeCommands(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/dk.itu.real.ooe.MinecraftService/executeCommands',
+            minecraft__pb2.Commands.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
