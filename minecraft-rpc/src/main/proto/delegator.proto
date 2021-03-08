@@ -9,6 +9,8 @@ service Delegator {
 
 message ServerConfig {
     WorldType worldType = 1;
+    int32 maxHeapSize = 2;
+    int32 minHeapSize = 3;
 }
 
 message Ports {

@@ -9,4 +9,3 @@ WORKDIR /server
 COPY docker-build-tools/server-base .
 COPY docker-build-tools/flat-world/world world/
 COPY --from=builder src/target/minecraft-rpc-0.0.5.jar mods/
-CMD java -jar spongevanilla-1.12.2-7.3.0.jar

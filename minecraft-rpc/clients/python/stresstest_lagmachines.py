@@ -11,7 +11,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
-ip = "18.197.150.76"
+ip = "18.185.58.107"
 
 #The lag machine itself
 def getListOfLagMachinesOnY(x, y, z):
