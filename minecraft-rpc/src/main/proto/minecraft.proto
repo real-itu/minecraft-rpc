@@ -21,7 +21,9 @@ service MinecraftService {
     /** Fill a cube with a block type */
     rpc fillCube (FillCubeRequest) returns (google.protobuf.Empty);
 
-    rpc readEntitiesInSphere(Sphere) returns (Entities);  
+    rpc readEntitiesInSphere(Sphere) returns (Entities);
+
+    rpc ExecuteCommands(Commands) returns (google.protobuf.Empty);
 }
 
 /** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
@@ -93,6 +95,14 @@ message Entity {
     EntityType type = 2;
     Point position = 3;
     bool isLoaded = 4;
+}
+
+message Commands {
+    repeated Command commands = 1;
+}
+
+message Command {
+    string command = 1;
 }
 
 /** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */
