@@ -11,6 +11,8 @@ import delegator_pb2_grpc
 import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
+host = "13.53.44.251"
+
 def wait_for_futures(futures):
     b = True
     while(b):
@@ -36,15 +38,17 @@ def spawnServers(client, amount):
     return servers
 
 #Spawn server with docker
-channel = grpc.insecure_channel('localhost:5001')
+channel = grpc.insecure_channel(host+':5001')
 client = delegator_pb2_grpc.DelegatorStub(channel)
 
 #Calls for async spawn of 2 servers
 servers = spawnServers(client, 2)
 
+print(servers)
+
 for server in servers:
     #Establish connection to spawned server
-    server1_channel = grpc.insecure_channel('localhost:'+str(server.rpcPort))
+    server1_channel = grpc.insecure_channel(host + ':'+str(server.rpcPort))
     server1_client = minecraft_pb2_grpc.MinecraftServiceStub(server1_channel)
 
     server1_client.fillCube(FillCubeRequest(  # Clear a 20x10x20 working area
@@ -67,5 +71,7 @@ for server in servers:
         # Activate
         Block(position=Point(x=1, y=6, z=-1), type=QUARTZ_BLOCK, orientation=NORTH),
     ]))
+
+    input("luk servers?")
 
     #client.CloseServer(Port(port=port.rpcPort))

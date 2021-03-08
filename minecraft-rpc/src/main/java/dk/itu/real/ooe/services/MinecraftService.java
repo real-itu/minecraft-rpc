@@ -21,6 +21,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.command.CommandManager;
 import com.flowpowered.math.vector.Vector3d;
 
 import java.lang.reflect.Field;
@@ -216,6 +217,17 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 }
         ).name("fillCube").submit(plugin);
     }
+
+    @Override
+    public void executeCommands(Commands commands, StreamObserver<Empty> responseObserver){
+        CommandManager cmdManager = Sponge.getCommandManager();
+        for(Command command : commands.getCommandsList()){
+            cmdManager.process(Sponge.getServer().getConsole(), command.getCommand());
+        }
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
 
     public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
         Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
