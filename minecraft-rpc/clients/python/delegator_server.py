@@ -40,7 +40,13 @@ class DelegatorServicer(delegator_pb2_grpc.DelegatorServicer):
             imageName = flatImage
         elif request.worldType == delegator_pb2.WorldType.DEFAULT:
             imageName = defaultImage
-        container = docker_client.containers.run(imageName, detach=True, ports={'5001/tcp':str(rpcPort), '25565/tcp':str(mcPort)})
+        startUpCommand = 'java '
+        if request.maxHeapSize != 0 :
+            startUpCommand += '-Xmx' + str(request.maxHeapSize) +'M '
+        if request.minHeapSize != 0 :
+            startUpCommand += '-Xms' + str(request.minHeapSize) + 'M '
+        startUpCommand += '-jar spongevanilla-1.12.2-7.3.0.jar'
+        container = docker_client.containers.run(imageName, command=startUpCommand, detach=True, ports={'5001/tcp':str(rpcPort), '25565/tcp':str(mcPort)})
         containers[rpcPort] = container
         regex = ".*Done\ \(.*\)\!\ For\ help.*"
         while(not re.search(regex, str(container.logs()))):

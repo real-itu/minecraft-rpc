@@ -11,7 +11,7 @@ import delegator_pb2_grpc
 import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
-host = "13.53.44.251"
+host = "localhost"
 
 def wait_for_futures(futures):
     b = True
@@ -27,7 +27,7 @@ def spawnServers(client, amount):
     servers = []
 
     for i in range(amount):
-        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT))
+        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT, maxHeapSize=10000, minHeapSize=512))
         futures.append(call_future)
 
     futures = wait_for_futures(futures)
