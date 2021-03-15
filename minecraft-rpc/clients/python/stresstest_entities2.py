@@ -13,37 +13,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
-ip = "18.197.58.194"
-
-#Returns single layer of entities
-def getSingleLayerOfEntities(x, y, z, size):
-    layerOfEntities = []
-
-    for i in range(size-1):
-        for u in range(size-1):
-            layerOfEntities.append(SpawnEntity(spawnPosition=Point(x=x+i, y=y, z=z+u), type=ENTITY_CREEPER))
-    return layerOfEntities
-
-#Returns single layer of blocks
-def getSingleLayerOfBlocks(x, y, z, size):
-    layerOfBlocks = []
-
-    for i in range(size-1):
-        for u in range(size-1):
-            layerOfBlocks.append(Block(position=Point(x=x+i, y=y, z=z+u), type=DIRT,  orientation=NORTH))
-    return layerOfBlocks
-
-#Gives chunks of entities
-def getChunkOfEntities(x, y, z, height, size):
-    blocks = []
-    for i in range(y, height, 3):
-        blocks= blocks + getSingleLayerOfBlocks(x, i, z, size)
-    
-    entities = []
-    for i in range(y, height, 3):
-        entities = entities + getSingleLayerOfEntities(x, i, z, size)
-
-    return (blocks, entities)
+ip = "localhost"
 
 #Waits for all futures in a list to be done
 def wait_for_futures(futures):
@@ -69,19 +39,6 @@ def spawnServers(client, amount):
         servers.append(futures[i].result())
 
     return servers
-
-def spawnEntityChunkOnServer(servers, posX, posY, posZ, size):
-    i = 0
-    while i < len(servers):
-        #Establish connection to spawned server
-        server_channel = grpc.insecure_channel(ip+':'+str(servers[i].rpcPort))
-        server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
-
-        #Spawn lag machine on server
-        blocks, entities = getChunkOfEntities(posX, posY, posZ, height, size)
-        server_client.spawnBlocks(Blocks(blocks=blocks))
-        server_client.spawnEntities(SpawnEntities(spawnEntities=entities))
-        i +=1
     
 def sendCommand(server, cmd):
     server_channel = grpc.insecure_channel(ip+':'+str(server.rpcPort))
@@ -90,6 +47,25 @@ def sendCommand(server, cmd):
     server_client.executeCommands(Commands(commands=[
         Command(command=cmd)
     ]))
+
+def getEntities(x, y, z, size):
+    entities = []
+    for i in range(size):
+        entities.append(SpawnEntity(spawnPosition=Point(x=x, y=y, z=z), type=ENTITY_CREEPER))
+    return entities
+
+
+def spawnEntities(servers, posX, posY, posZ, size):
+    i = 0
+    while i < len(servers):
+        #Establish connection to spawned server
+        server_channel = grpc.insecure_channel(ip+':'+str(servers[i].rpcPort))
+        server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
+
+        #Spawn lag machine on server
+        entities = getEntities(posX, posY, posZ, size)
+        server_client.spawnEntities(SpawnEntities(spawnEntities=entities))
+        i +=1
 
 
 #---------------------------------------------------------------------------------------------------------#
@@ -100,8 +76,7 @@ def sendCommand(server, cmd):
 posX = int(input("Where do you want your entity chunk? format: x ENTER y ENTER z ENTER\n"))
 posY = int(input())
 posZ = int(input())
-height = int(input("How many layers of entities do you want? format: h\n"))
-size = int(input("What should the size be of the entity chunk area? format: s\n"))
+size = int(input("How many?\n"))
 amountOfServers = int(input("How many servers do you want duplicated with these entity chunks? format: c\n"))
 
 print("Processing ...")
@@ -113,10 +88,9 @@ client = delegator_pb2_grpc.DelegatorStub(channel)
 servers = []
 servers = spawnServers(client, amountOfServers)
 
-spawnEntityChunkOnServer(servers, posX, posY, posZ, size)
+spawnEntities(servers, posX, posY, posZ, size)
 
 while 1:
     time.sleep(5)
     for server in servers:
         sendCommand(server, "sponge tps")
-
