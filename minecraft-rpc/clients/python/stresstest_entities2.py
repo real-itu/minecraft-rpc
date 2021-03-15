@@ -30,7 +30,7 @@ def spawnServers(client, amount):
     servers = []
 
     for i in range(amount):
-        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT, maxHeapSize=6000))
+        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT, maxHeapSize=3000))
         futures.append(call_future)
 
     futures = wait_for_futures(futures)
@@ -48,36 +48,11 @@ def sendCommand(server, cmd):
         Command(command=cmd)
     ]))
 
-#---------------------------------------------------------------------------------------------------------#
-#---------------------------------------------------------------------------------------------------------#
-#---------------------------------------------------------------------------------------------------------#
-def getEntityColumn(x, y, z):
-    height = y
-    cap = 256
-    blocks = []
-    entities = []
-    
-    while height < cap-2:
-        entities.append(SpawnEntity(spawnPosition=Point(x=x, y=height+1, z=z), type=ENTITY_CREEPER))
-        blocks.append(Block(position=Point(x=x, y=height, z=z), type=DIRT, orientation=NORTH))
-        blocks.append(Block(position=Point(x=x, y=height+1, z=z), type=AIR, orientation=NORTH))
-        blocks.append(Block(position=Point(x=x, y=height+2, z=z), type=AIR, orientation=NORTH))
-        height += 3
-
-    return blocks, entities
-
-
 def getEntities(x, y, z, size):
-    blocks = []
     entities = []
-
     for i in range(size):
-        cBlocks, cEntities = getEntityColumn(x+((i)%16), y, z+(int((i)/16)))
-        blocks += cBlocks
-        entities += cEntities
-
-
-    return blocks, entities
+        entities.append(SpawnEntity(spawnPosition=Point(x=x, y=y, z=z), type=ENTITY_CREEPER))
+    return entities
 
 
 def spawnEntities(servers, posX, posY, posZ, size):
@@ -88,8 +63,7 @@ def spawnEntities(servers, posX, posY, posZ, size):
         server_client = minecraft_pb2_grpc.MinecraftServiceStub(server_channel)
 
         #Spawn lag machine on server
-        blocks, entities = getEntities(posX, posY, posZ, size)
-        server_client.spawnBlocks(Blocks(blocks=blocks))
+        entities = getEntities(posX, posY, posZ, size)
         server_client.spawnEntities(SpawnEntities(spawnEntities=entities))
         i +=1
 
@@ -105,7 +79,6 @@ posZ = int(input())
 size = int(input("How many?\n"))
 amountOfServers = int(input("How many servers do you want duplicated with these entity chunks? format: c\n"))
 
-input("Entities: " + str(int((256-posY)/3*size)))
 print("Processing ...")
 
 #Make docker
@@ -118,6 +91,6 @@ servers = spawnServers(client, amountOfServers)
 spawnEntities(servers, posX, posY, posZ, size)
 
 while 1:
-    time.sleep(2)
+    time.sleep(5)
     for server in servers:
         sendCommand(server, "sponge tps")
