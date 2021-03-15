@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import random
 import logging
+import time
 
 import grpc
 
@@ -12,7 +13,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
-ip = "52.29.166.72"
+ip = "18.197.58.194"
 
 #Returns single layer of entities
 def getSingleLayerOfEntities(x, y, z, size):
@@ -59,7 +60,7 @@ def spawnServers(client, amount):
     servers = []
 
     for i in range(amount):
-        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT))
+        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT, maxHeapSize=3000))
         futures.append(call_future)
 
     futures = wait_for_futures(futures)
@@ -111,16 +112,11 @@ client = delegator_pb2_grpc.DelegatorStub(channel)
 
 servers = []
 servers = spawnServers(client, amountOfServers)
-for server in servers:
-    sendCommand(server, "spark profiler")
+
 spawnEntityChunkOnServer(servers, posX, posY, posZ, size)
 
-input("Press for health report")
-for server in servers:
-    sendCommand(server, "spark healthreport")
-
 while 1:
-    input("Press for timings")
+    time.sleep(5)
     for server in servers:
-        sendCommand(server, "spark profiler --stop")
+        sendCommand(server, "sponge tps")
 

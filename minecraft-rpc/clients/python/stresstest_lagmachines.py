@@ -11,7 +11,7 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
-ip = "18.185.58.107"
+ip = "3.122.95.204"
 
 #The lag machine itself
 def getListOfLagMachinesOnY(x, y, z):
@@ -53,7 +53,7 @@ def spawnServers(client, amount):
     servers = []
 
     for i in range(amount):
-        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT))
+        call_future = client.SpawnNewServer.future(ServerConfig(worldType=FLAT, maxHeapSize=3000))
         futures.append(call_future)
 
     futures = wait_for_futures(futures)
