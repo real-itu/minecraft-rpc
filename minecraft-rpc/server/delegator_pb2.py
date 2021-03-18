@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x64\x65legator.proto\"-\n\x0cServerConfig\x12\x1d\n\tworldType\x18\x01 \x01(\x0e\x32\n.WorldType\"(\n\x05Ports\x12\x0f\n\x07rpcPort\x18\x01 \x01(\x05\x12\x0e\n\x06mcPort\x18\x02 \x01(\x05\"\x14\n\x04Port\x12\x0c\n\x04port\x18\x01 \x01(\x05\"\x07\n\x05\x45mpty*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32V\n\tDelegator\x12)\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x06.Ports\"\x00\x12\x1e\n\x0b\x43loseServer\x12\x05.Port\x1a\x06.Empty\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0f\x64\x65legator.proto\"W\n\x0cServerConfig\x12\x1d\n\tworldType\x18\x01 \x01(\x0e\x32\n.WorldType\x12\x13\n\x0bmaxHeapSize\x18\x02 \x01(\x05\x12\x13\n\x0bminHeapSize\x18\x03 \x01(\x05\"(\n\x05Ports\x12\x0f\n\x07rpcPort\x18\x01 \x01(\x05\x12\x0e\n\x06mcPort\x18\x02 \x01(\x05\"!\n\x04Port\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\"\x07\n\x05\x45mpty*\"\n\tWorldType\x12\x08\n\x04\x46LAT\x10\x00\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x01\x32V\n\tDelegator\x12)\n\x0eSpawnNewServer\x12\r.ServerConfig\x1a\x06.Ports\"\x00\x12\x1e\n\x0b\x43loseServer\x12\x05.Port\x1a\x06.Empty\"\x00\x62\x06proto3'
 )
 
 _WORLDTYPE = _descriptor.EnumDescriptor(
@@ -43,8 +43,8 @@ _WORLDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=139,
-  serialized_end=173,
+  serialized_start=194,
+  serialized_end=228,
 )
 _sym_db.RegisterEnumDescriptor(_WORLDTYPE)
 
@@ -69,6 +69,20 @@ _SERVERCONFIG = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='maxHeapSize', full_name='ServerConfig.maxHeapSize', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='minHeapSize', full_name='ServerConfig.minHeapSize', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -82,7 +96,7 @@ _SERVERCONFIG = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=64,
+  serialized_end=106,
 )
 
 
@@ -120,8 +134,8 @@ _PORTS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=66,
-  serialized_end=106,
+  serialized_start=108,
+  serialized_end=148,
 )
 
 
@@ -159,8 +173,8 @@ _PORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=108,
-  serialized_end=128,
+  serialized_start=150,
+  serialized_end=183,
 )
 
 
@@ -184,8 +198,8 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=130,
-  serialized_end=137,
+  serialized_start=185,
+  serialized_end=192,
 )
 
 _SERVERCONFIG.fields_by_name['worldType'].enum_type = _WORLDTYPE
@@ -233,8 +247,8 @@ _DELEGATOR = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=175,
-  serialized_end=261,
+  serialized_start=230,
+  serialized_end=316,
   methods=[
   _descriptor.MethodDescriptor(
     name='SpawnNewServer',
