@@ -8,18 +8,31 @@ package dk.itu.real.ooe;
 service MinecraftService {
     /** Spawn multiple blocks. */
     rpc spawnBlocks (Blocks) returns (google.protobuf.Empty);
+    
+    /** Reads multiple entities **/
+    rpc readEntities (Uuids) returns (Entities);
+
+    /** Spawn multiple entities. */
+    rpc spawnEntities (SpawnEntities) returns (Uuids);
 
     /** Return all blocks in a cube */
     rpc readCube (Cube) returns (Blocks);
 
     /** Fill a cube with a block type */
     rpc fillCube (FillCubeRequest) returns (google.protobuf.Empty);
+
+    rpc readEntitiesInSphere(Sphere) returns (Entities);  
 }
 
 /** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
 message Cube {
     Point min = 1;
     Point max = 2;
+}
+
+message Sphere {
+    Point center = 1;
+    double radius = 2;
 }
 
 /** A request to fill the cube with the block type */
@@ -55,6 +68,31 @@ enum Orientation {
     EAST = 3;
     UP = 4;
     DOWN = 5;
+}
+
+message Uuids {
+    repeated string uuids = 1;
+}
+
+message SpawnEntities {
+    repeated SpawnEntity spawnEntities = 1;
+}
+
+message SpawnEntity {
+    EntityType type = 1;
+    Point spawnPosition = 2;
+}
+
+message Entities {
+    repeated Entity entities = 1;
+}
+
+/** A single entity */
+message Entity {
+    string id = 1;
+    EntityType type = 2;
+    Point position = 3;
+    bool isLoaded = 4;
 }
 
 /** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */
@@ -313,4 +351,97 @@ enum BlockType {
     YELLOW_FLOWER = 251;
     YELLOW_GLAZED_TERRACOTTA = 252;
     YELLOW_SHULKER_BOX = 253;
+}
+
+enum EntityType {
+    ENTITY_AREA_EFFECT_CLOUD=0;
+    ENTITY_ARMOR_STAND=1;
+    ENTITY_BAT=2;
+    ENTITY_BLAZE=3;
+    ENTITY_BOAT=4;
+    ENTITY_CAVE_SPIDER=5;
+    ENTITY_CHESTED_MINECART=6;
+    ENTITY_CHICKEN=7;
+    ENTITY_COMMANDBLOCK_MINECART=8;
+    ENTITY_COMPLEX_PART=9;
+    ENTITY_COW=10;
+    ENTITY_CREEPER=11;
+    ENTITY_DONKEY=12;
+    ENTITY_DRAGON_FIREBALL=13;
+    ENTITY_EGG=14;
+    ENTITY_ELDER_GUARDIAN=15;
+    ENTITY_ENDER_CRYSTAL=16;
+    ENTITY_ENDER_DRAGON=17;
+    ENTITY_ENDER_PEARL=18;
+    ENTITY_ENDERMAN=19;
+    ENTITY_ENDERMITE=20;
+    ENTITY_EVOCATION_FANGS=21;
+    ENTITY_EVOCATION_ILLAGER=22;
+    ENTITY_EXPERIENCE_ORB=23;
+    ENTITY_EYE_OF_ENDER=24;
+    ENTITY_FALLING_BLOCK=25;
+    ENTITY_FIREBALL=26;
+    ENTITY_FIREWORK=27;
+    ENTITY_FISHING_HOOK=28;
+    ENTITY_FURNACE_MINECART=29;
+    ENTITY_GHAST=30;
+    ENTITY_GIANT=31;
+    ENTITY_GUARDIAN=32;
+    ENTITY_HOPPER_MINECART=33;
+    ENTITY_HORSE=34;
+    ENTITY_HUMAN=35;
+    ENTITY_HUSK=36;
+    ENTITY_ILLUSION_ILLAGER=37;
+    ENTITY_IRON_GOLEM=38;
+    ENTITY_ITEM=39;
+    ENTITY_ITEM_FRAME=40;
+    ENTITY_LEASH_HITCH=41;
+    ENTITY_LIGHTNING=42;
+    ENTITY_LLAMA=43;
+    ENTITY_LLAMA_SPIT=44;
+    ENTITY_MAGMA_CUBE=45;
+    ENTITY_MOB_SPAWNER_MINECART=46;
+    ENTITY_MULE=47;
+    ENTITY_MUSHROOM_COW=48;
+    ENTITY_OCELOT=49;
+    ENTITY_PAINTING=50;
+    ENTITY_PARROT=51;
+    ENTITY_PIG=52;
+    ENTITY_PIG_ZOMBIE=53;
+    ENTITY_PLAYER=54;
+    ENTITY_POLAR_BEAR=55;
+    ENTITY_PRIMED_TNT=56;
+    ENTITY_RABBIT=57;
+    ENTITY_RIDEABLE_MINECART=58;
+    ENTITY_SHEEP=59;
+    ENTITY_SHULKER=60;
+    ENTITY_SHULKER_BULLET=61;
+    ENTITY_SILVERFISH=62;
+    ENTITY_SKELETON=63;
+    ENTITY_SKELETON_HORSE=64;
+    ENTITY_SLIME=65;
+    ENTITY_SMALL_FIREBALL=66;
+    ENTITY_SNOWBALL=67;
+    ENTITY_SNOWMAN=68;
+    ENTITY_SPECTRAL_ARROW=69;
+    ENTITY_SPIDER=70;
+    ENTITY_SPLASH_POTION=71;
+    ENTITY_SQUID=72;
+    ENTITY_STRAY=73;
+    ENTITY_THROWN_EXP_BOTTLE=74;
+    ENTITY_TIPPED_ARROW=75;
+    ENTITY_TNT_MINECART=76;
+    ENTITY_UNKNOWN=77;
+    ENTITY_VEX=78;
+    ENTITY_VILLAGER=79;
+    ENTITY_VINDICATION_ILLAGER=80;
+    ENTITY_WEATHER=81;
+    ENTITY_WITCH=82;
+    ENTITY_WITHER=83;
+    ENTITY_WITHER_SKELETON=84;
+    ENTITY_WITHER_SKULL=85;
+    ENTITY_WOLF=86;
+    ENTITY_ZOMBIE=87;
+    ENTITY_ZOMBIE_HORSE=88;
+    ENTITY_ZOMBIE_VILLAGER=89;
 }
