@@ -1,5 +1,7 @@
 package dk.itu.real.ooe.services;
 
+import com.flowpowered.math.vector.Vector3i;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Empty;
 import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
@@ -19,6 +21,7 @@ import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.ChunkTicketManager;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
@@ -35,12 +38,22 @@ public class MinecraftService extends MinecraftServiceImplBase {
 
 
     private final PluginContainer plugin;
+    private final ChunkTicketManager ticketManager;
     private final Map<String, String> blockNamesToBlockTypes = new HashMap<>(); // minecraft:dirt --> DIRT
     private final Map<String, String> entityNamesToEntityTypes = new HashMap<>(); //minecraft:creeper --> CREEPER
 
 
     public MinecraftService(PluginContainer plugin) throws IllegalAccessException {
         this.plugin = plugin;
+
+        this.ticketManager = Sponge.getServer().getChunkTicketManager();
+        this.ticketManager.registerCallback(plugin.getInstance().get(), new ChunkTicketManager.Callback() {
+            @Override
+            public void onLoaded(ImmutableList<ChunkTicketManager.LoadingTicket> tickets, World world) {
+                //?
+                System.out.println("something loaded");
+            }
+        });
 
         for (Field field : BlockTypes.class.getFields()) {
             BlockType blockType = (BlockType) field.get(null);
@@ -145,11 +158,20 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 try {
                     org.spongepowered.api.entity.EntityType entityType = (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(entity.getType().toString().split("_", 2)[1]).get(null);
                     Point pos = entity.getSpawnPosition();
+
                     org.spongepowered.api.entity.Entity newEntity = world.createEntity(entityType, new Vector3d(pos.getX(), pos.getY(), pos.getZ()));
-                    try (StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
-                        frame.addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
-                        world.spawnEntity(newEntity);
+                    Optional<ChunkTicketManager.EntityLoadingTicket> ticketHolder = ticketManager.createEntityTicket(this.plugin.getInstance().get(), world);
+                    if(ticketHolder.isPresent()){
+                        ChunkTicketManager.EntityLoadingTicket ticket = ticketHolder.get();
+                        ticket.bindToEntity(newEntity);
+                        ticket.forceChunk(newEntity.getLocation().getChunkPosition());
                     }
+                    world.spawnEntity(newEntity);
+
+                    //try (StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
+                    //    frame.addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
+                    //    world.spawnEntity(newEntity);
+                    //}
                 builder.addUuids(newEntity.getUniqueId().toString()).build();
                 } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
                     this.plugin.getLogger().info(e.getMessage());
@@ -231,5 +253,4 @@ public class MinecraftService extends MinecraftServiceImplBase {
         }
         blockLoc.setBlock(newState.get());
     }
-
 }
