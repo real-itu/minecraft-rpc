@@ -10,6 +10,7 @@ import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.CauseStackManager.StackFrame;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
@@ -18,6 +19,8 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
+import org.spongepowered.api.event.world.chunk.ForcedChunkEvent;
+import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
@@ -27,11 +30,7 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class MinecraftService extends MinecraftServiceImplBase {
@@ -39,6 +38,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
 
     private final PluginContainer plugin;
     private final ChunkTicketManager ticketManager;
+    private final Map<Vector3i, List<Entity>> entityQueue = new HashMap<>();
     private final Map<String, String> blockNamesToBlockTypes = new HashMap<>(); // minecraft:dirt --> DIRT
     private final Map<String, String> entityNamesToEntityTypes = new HashMap<>(); //minecraft:creeper --> CREEPER
 
@@ -50,8 +50,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
         this.ticketManager.registerCallback(plugin.getInstance().get(), new ChunkTicketManager.Callback() {
             @Override
             public void onLoaded(ImmutableList<ChunkTicketManager.LoadingTicket> tickets, World world) {
-                //?
-                System.out.println("something loaded");
+                //This need to be here so the ticket manager doesnt throw errors.
             }
         });
 
@@ -158,21 +157,26 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 try {
                     org.spongepowered.api.entity.EntityType entityType = (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(entity.getType().toString().split("_", 2)[1]).get(null);
                     Point pos = entity.getSpawnPosition();
-
                     org.spongepowered.api.entity.Entity newEntity = world.createEntity(entityType, new Vector3d(pos.getX(), pos.getY(), pos.getZ()));
-                    Optional<ChunkTicketManager.EntityLoadingTicket> ticketHolder = ticketManager.createEntityTicket(this.plugin.getInstance().get(), world);
-                    if(ticketHolder.isPresent()){
-                        ChunkTicketManager.EntityLoadingTicket ticket = ticketHolder.get();
-                        ticket.bindToEntity(newEntity);
-                        ticket.forceChunk(newEntity.getLocation().getChunkPosition());
+                    //Check if chunk is loaded
+                    if(world.getChunk(newEntity.getLocation().getChunkPosition()).isPresent()){
+                        world.spawnEntity(newEntity);
+                    } else {
+                        Vector3i chunkPosition = newEntity.getLocation().getChunkPosition();
+                        if(entityQueue.containsKey(chunkPosition)){
+                            entityQueue.get(chunkPosition).add(newEntity);
+                        } else {
+                            entityQueue.put(chunkPosition, new ArrayList<>(Arrays.asList(newEntity)));
+                        }
+                        Optional<ChunkTicketManager.EntityLoadingTicket> ticketHolder = ticketManager.createEntityTicket(this.plugin.getInstance().get(), world);
+                        //TODO: throw error ticket cant be made
+                        if(ticketHolder.isPresent()) {
+                            ChunkTicketManager.EntityLoadingTicket ticket = ticketHolder.get();
+                            ticket.bindToEntity(newEntity);
+                            ticket.forceChunk(newEntity.getLocation().getChunkPosition());
+                        }
                     }
-                    world.spawnEntity(newEntity);
-
-                    //try (StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
-                    //    frame.addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
-                    //    world.spawnEntity(newEntity);
-                    //}
-                builder.addUuids(newEntity.getUniqueId().toString()).build();
+                    builder.addUuids(newEntity.getUniqueId().toString()).build();
                 } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
                     this.plugin.getLogger().info(e.getMessage());
                 }
@@ -252,5 +256,13 @@ public class MinecraftService extends MinecraftServiceImplBase {
             throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
         }
         blockLoc.setBlock(newState.get());
+    }
+
+    @Listener
+    public void onForceChunkLoad(LoadChunkEvent event){
+        World world = Sponge.getServer().getWorlds().iterator().next();
+        if(entityQueue.containsKey(event.getTargetChunk().getPosition())){
+            world.spawnEntities(entityQueue.get(event.getTargetChunk().getPosition()));
+        }
     }
 }
