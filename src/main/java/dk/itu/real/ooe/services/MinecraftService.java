@@ -21,7 +21,6 @@ import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.ChunkTicketManager;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
@@ -80,7 +79,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
                             Point pos = block.getPosition();
                             Orientation orientation = block.getOrientation();
                             world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
-                            if (blockType.getDefaultState().supports(Keys.DIRECTION)) {
+                            if (blockType.defaultState().supports(Keys.DIRECTION)) {
                                 setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
                             }
                         } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ){
