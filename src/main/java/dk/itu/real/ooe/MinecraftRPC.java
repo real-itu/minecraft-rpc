@@ -13,8 +13,6 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.IOException;
 
-// Imports for logger
-
 @Plugin(id = "minecraft_rpc", name = "Minecraft RPC", version = "1.0", description = "A plugin for Sponge which lets you control Minecraft using gRPC.")
 public class MinecraftRPC {
     @Inject
@@ -30,8 +28,9 @@ public class MinecraftRPC {
     @Listener
     public void onPreInitialization(GamePreInitializationEvent event) throws IOException, IllegalAccessException {
         PluginContainer plugin = game.getPluginManager().getPlugin("minecraft_rpc").get();
-        MinecraftService service = new MinecraftService(plugin);
-        Sponge.getEventManager().registerListeners(this, service);
+        ForceChunkLoadListener chunkLoader = new ForceChunkLoadListener();
+        MinecraftService service = new MinecraftService(plugin, chunkLoader);
+        Sponge.getEventManager().registerListeners(this, chunkLoader);
         ServerBuilder.forPort(5001).addService(service).build().start();
         logger.info("Listening on 5001");
     }
