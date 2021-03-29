@@ -31,7 +31,7 @@ public class MinecraftRPC {
         ForceChunkLoadListener chunkLoader = new ForceChunkLoadListener();
         MinecraftService service = new MinecraftService(plugin, chunkLoader);
         Sponge.getEventManager().registerListeners(this, chunkLoader);
-        ServerBuilder.forPort(5001).addService(service).build().start();
-        logger.info("Listening on 5001");
+        ServerBuilder.forPort(5002).addService(service).build().start();
+        logger.info("Listening on 5002");
     }
 }

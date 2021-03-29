@@ -121,7 +121,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 Optional<Entity> entityOption = world.getEntity(UUID.fromString(id));
                 if(!entityOption.isPresent()){
                     builder.addEntities(Minecraft.Entity.newBuilder()
-                        //Proto ignores defualt values so there is no need to set type, position and isloaded
+                        //Proto ignores default values so there is no need to set type, position and isLoaded
                         .setId(id)).build();
                 } else {
                     org.spongepowered.api.entity.Entity entity = entityOption.get();
