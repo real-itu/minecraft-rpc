@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
 package dk.itu.real.ooe;
 
 /**
@@ -21,7 +22,10 @@ service MinecraftService {
     /** Fill a cube with a block type */
     rpc fillCube (FillCubeRequest) returns (google.protobuf.Empty);
 
-    rpc readEntitiesInSphere(Sphere) returns (Entities);  
+    /** Read entities in specified radius */
+    rpc readEntitiesInSphere(Sphere) returns (Entities);
+
+    rpc updateEntityAI(EntityAIUpdate) returns (google.protobuf.Empty);
 }
 
 /** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
@@ -93,6 +97,21 @@ message Entity {
     EntityType type = 2;
     Point position = 3;
     bool isLoaded = 4;
+}
+
+message EntityAIUpdate {
+    string uuid = 1;
+    bool resetGoals = 2;
+    repeated AITask AITasks = 3;
+}
+
+message AITask {
+    int32 priority = 1;
+    google.protobuf.Any task = 2;
+}
+
+message AITASK_Idle {
+
 }
 
 /** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */

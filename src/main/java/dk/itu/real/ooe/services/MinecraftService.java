@@ -1,5 +1,6 @@
 package dk.itu.real.ooe.services;
 
+import com.google.protobuf.Any;
 import com.google.protobuf.Empty;
 import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
@@ -8,6 +9,10 @@ import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.ai.Goal;
+import org.spongepowered.api.entity.ai.GoalTypes;
+import org.spongepowered.api.entity.ai.task.builtin.LookIdleAITask;
+import org.spongepowered.api.entity.living.Agent;
 import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.CauseStackManager.StackFrame;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
@@ -24,11 +29,7 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class MinecraftService extends MinecraftServiceImplBase {
@@ -215,6 +216,37 @@ public class MinecraftService extends MinecraftServiceImplBase {
                     responseObserver.onCompleted();
                 }
         ).name("fillCube").submit(plugin);
+    }
+
+    @Override
+    public void updateEntityAI(EntityAIUpdate request, StreamObserver<Empty> responseObserver){
+        Task.builder().execute(() -> {
+            World world = Sponge.getServer().getWorlds().iterator().next();
+            Agent agent = (Agent) world.getEntity(UUID.fromString(request.getUuid())).get();
+            if(request.getResetGoals()){
+                //Clear goals if they exist
+                Optional<Goal<Agent>> normalGoal = agent.getGoal(GoalTypes.NORMAL);
+                normalGoal.ifPresent(Goal::clear);
+                Optional<Goal<Agent>> targetGoal = agent.getGoal(GoalTypes.TARGET);
+                targetGoal.ifPresent(Goal::clear);
+            }
+            configureAITasks(agent, request.getAITasksList());
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        }).name("updateEntityAI").submit(plugin);
+    }
+
+    private void configureAITasks(Agent agent, List<AITask> tasks){
+        Goal<Agent> goal = agent.getGoal(GoalTypes.NORMAL).get();
+        for (AITask task: tasks) {
+           if(task.getTask().is(AITASK_Idle.class)){
+               LookIdleAITask idle = LookIdleAITask.builder().build(agent);
+               goal.addTask(task.getPriority(), idle);
+               System.out.println("hello from idle");
+           }else {
+               throw new RuntimeException("AI Task not recognised");
+           }
+        }
     }
 
     public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
