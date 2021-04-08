@@ -1,5 +1,6 @@
 package dk.itu.real.ooe.services;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.google.protobuf.Empty;
 import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
@@ -166,11 +167,20 @@ public class MinecraftService extends MinecraftServiceImplBase {
         Task.builder().execute(() -> {
                     Blocks.Builder builder = Blocks.newBuilder();
                     World world = Sponge.getServer().getWorlds().iterator().next();
-                    Point min = cube.getMin();
-                    Point max = cube.getMax();
-                    for (int x = min.getX(); x <= max.getX(); x++) {
-                        for (int y = min.getY(); y <= max.getY(); y++) {
-                            for (int z = min.getZ(); z <= max.getZ(); z++) {
+                    Point p1 = cube.getMin();
+                    Point p2 = cube.getMax();
+                    int minX = Math.min(p1.getX(), p2.getX());
+                    int minY = Math.min(p1.getY(), p2.getY());
+                    int minZ = Math.min(p1.getZ(), p2.getZ());
+                    Vector3d min = new Vector3d(minX, minY, minZ);
+                    int maxX = Math.max(p1.getX(), p2.getX());
+                    int maxY = Math.max(p1.getY(), p2.getY());
+                    int maxZ = Math.max(p1.getZ(), p2.getZ());
+                    Vector3d max = new Vector3d(maxX, maxY, maxZ);
+
+                    for (int x = (int)min.getX(); x <= max.getX(); x++) {
+                        for (int y = (int)min.getY(); y <= max.getY(); y++) {
+                            for (int z = (int)min.getZ(); z <= max.getZ(); z++) {
                                 String name = world.getLocation(x, y, z).getBlock().getType().getName();
                                 builder.addBlocks(Block.newBuilder()
                                         .setPosition(Point.newBuilder()
@@ -194,8 +204,19 @@ public class MinecraftService extends MinecraftServiceImplBase {
         Task.builder().execute(() -> {
                     World world = Sponge.getServer().getWorlds().iterator().next();
                     Cube c = request.getCube();
-                    Point min = c.getMin();
-                    Point max = c.getMax();
+                    Point p1 = c.getMin();
+                    Point p2 = c.getMax();
+
+                    //Creates a min and max point understandable by the program.
+                    int minX = Math.min(p1.getX(), p2.getX());
+                    int minY = Math.min(p1.getY(), p2.getY());
+                    int minZ = Math.min(p1.getZ(), p2.getZ());
+                    Vector3d min = new Vector3d(minX, minY, minZ);
+                    int maxX = Math.max(p1.getX(), p2.getX());
+                    int maxY = Math.max(p1.getY(), p2.getY());
+                    int maxZ = Math.max(p1.getZ(), p2.getZ());
+                    Vector3d max = new Vector3d(maxX, maxY, maxZ);
+
                     BlockType type;
                     try {
                         Field typeField = BlockTypes.class.getField(request.getType().toString());
@@ -204,9 +225,10 @@ public class MinecraftService extends MinecraftServiceImplBase {
                         throw new RuntimeException(e);
                     }
 
-                    for (int x = min.getX(); x <= max.getX(); x++) {
-                        for (int y = min.getY(); y <= max.getY(); y++) {
-                            for (int z = min.getZ(); z <= max.getZ(); z++) {
+
+                    for (int x = (int)min.getX(); x <= max.getX(); x++) {
+                        for (int y = (int)min.getY(); y <= max.getY(); y++) {
+                            for (int z = (int)min.getZ(); z <= max.getZ(); z++) {
                                 world.setBlockType(x, y, z, type);
                             }
                         }
