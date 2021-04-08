@@ -137,5 +137,4 @@ public class MinecraftService extends MinecraftServiceImplBase {
         }
         blockLoc.setBlock(newState.get());
     }
-
 }

@@ -80,7 +80,7 @@ message AITask_AvoidEntity {
     double closeRangeSpeed = 1;
     double farRangeSpeed = 2;
     float searchDistance = 3;
-    EntityType entityType = 4;
+    repeated EntityType entityType = 4;
 }
 
 message AITask_RangeAgent {
@@ -97,11 +97,8 @@ message AITask_Wander {
 message AITask_FindNearestTarget {
     int32 chance = 1;
     EntityType targetEntity = 2;
-}
-
-message AITask_Target {
-    bool onlyNearby = 1;
-    bool shouldCheckSight = 2;
+    bool onlyNearby = 3;
+    bool shouldCheckSight = 4;
 }
 
 enum EntityType {
