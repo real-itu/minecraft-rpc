@@ -1,6 +1,7 @@
 package dk.itu.real.ooe;
 
 import com.google.inject.Inject;
+import dk.itu.real.ooe.services.EntityService;
 import dk.itu.real.ooe.services.MinecraftService;
 import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class MinecraftRPC {
     @Listener
     public void onPreInitialization(GamePreInitializationEvent event) throws IOException, IllegalAccessException {
         PluginContainer plugin = game.getPluginManager().getPlugin("minecraft_rpc").get();
-        ServerBuilder.forPort(5001).addService(new MinecraftService(plugin)).build().start();
+        ServerBuilder.forPort(5001).addService(new MinecraftService(plugin)).addService(new EntityService(plugin)).build().start();
         logger.info("Listening on 5001");
     }
 }

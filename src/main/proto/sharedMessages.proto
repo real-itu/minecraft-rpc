@@ -1,0 +1,9 @@
+syntax = "proto3";
+package dk.itu.real.ooe;
+
+/** A point in 3D space */
+message Point {
+    int32 x = 1;
+    int32 y = 2;
+    int32 z = 3;
+}
