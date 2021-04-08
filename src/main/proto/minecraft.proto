@@ -4,7 +4,7 @@ import "google/protobuf/any.proto";
 package dk.itu.real.ooe;
 
 /**
-  The main service.
+  The Block Service
 */
 service MinecraftService {
     /** Spawn multiple blocks. */
@@ -110,8 +110,47 @@ message AITask {
     google.protobuf.Any task = 2;
 }
 
-message AITASK_Idle {
+message AITask_Idle {
 
+}
+
+message AITask_WatchClosest {
+    float chance = 1;
+    float maxDistance = 2;
+    EntityType entityType = 3;
+}
+
+message AITask_AttackLiving {
+    double speed = 1;
+    bool hasLongMemory = 2;
+}
+
+message AITask_AvoidEntity {
+    double closeRangeSpeed = 1;
+    double farRangeSpeed = 2;
+    float searchDistance = 3;
+    EntityType entityType = 4;
+}
+
+message AITask_RangeAgent {
+    float attackRadius = 1;
+    int32 delayBetweenAttacks = 2;
+    double moveSpeed = 3;
+}
+
+message AITask_Wander {
+    int32 chance = 1;
+    double speed = 2;
+}
+
+message AITask_FindNearestTarget {
+    int32 chance = 1;
+    EntityType targetEntity = 2;
+}
+
+message AITask_Target {
+    bool onlyNearby = 1;
+    bool shouldCheckSight = 2;
 }
 
 /** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */

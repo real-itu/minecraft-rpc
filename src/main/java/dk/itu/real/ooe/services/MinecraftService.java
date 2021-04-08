@@ -1,7 +1,7 @@
 package dk.itu.real.ooe.services;
 
-import com.google.protobuf.Any;
 import com.google.protobuf.Empty;
+import com.google.protobuf.InvalidProtocolBufferException;
 import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
@@ -12,7 +12,10 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.ai.Goal;
 import org.spongepowered.api.entity.ai.GoalTypes;
 import org.spongepowered.api.entity.ai.task.builtin.LookIdleAITask;
+import org.spongepowered.api.entity.ai.task.builtin.WatchClosestAITask;
+import org.spongepowered.api.entity.ai.task.builtin.creature.AttackLivingAITask;
 import org.spongepowered.api.entity.living.Agent;
+import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.CauseStackManager.StackFrame;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
@@ -230,20 +233,44 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 Optional<Goal<Agent>> targetGoal = agent.getGoal(GoalTypes.TARGET);
                 targetGoal.ifPresent(Goal::clear);
             }
-            configureAITasks(agent, request.getAITasksList());
+            try {
+                configureAITasks(agent, request.getAITasksList());
+            } catch (InvalidProtocolBufferException | NoSuchFieldException | IllegalAccessException e) {
+                //TODO: handle this
+                e.printStackTrace();
+            }
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
         }).name("updateEntityAI").submit(plugin);
     }
 
-    private void configureAITasks(Agent agent, List<AITask> tasks){
+    private void configureAITasks(Agent agent, List<AITask> tasks) throws InvalidProtocolBufferException, NoSuchFieldException, IllegalAccessException {
         Goal<Agent> goal = agent.getGoal(GoalTypes.NORMAL).get();
         for (AITask task: tasks) {
-           if(task.getTask().is(AITASK_Idle.class)){
+           if(task.getTask().is(AITask_Idle.class)){
                LookIdleAITask idle = LookIdleAITask.builder().build(agent);
                goal.addTask(task.getPriority(), idle);
                System.out.println("hello from idle");
-           }else {
+           }else if(task.getTask().is(AITask_WatchClosest.class)){
+               AITask_WatchClosest watchClosest = task.getTask().unpack(AITask_WatchClosest.class);
+               //TODO: Fix this monstrosity
+               org.spongepowered.api.entity.EntityType type = (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(agent.getType().toString().split("_", 2)[1]).get(null);
+               WatchClosestAITask newTask = WatchClosestAITask.builder()
+                       .chance(watchClosest.getChance())
+                       .maxDistance(watchClosest.getMaxDistance())
+                       .watch(type.getEntityClass())
+                       .build(agent);
+               goal.addTask(task.getPriority(), newTask);
+           } else if(task.getTask().is(AITask_AttackLiving.class)){
+               AITask_AttackLiving attackLiving = task.getTask().unpack(AITask_AttackLiving.class);
+               AttackLivingAITask.Builder newTaskBuilder = AttackLivingAITask.builder()
+                       .speed(attackLiving.getSpeed());
+               if(attackLiving.getHasLongMemory()){
+                   newTaskBuilder.longMemory();
+               }
+               AttackLivingAITask newTask = newTaskBuilder.build((Creature) agent);
+               goal.addTask(task.getPriority(), newTask);
+           } else {
                throw new RuntimeException("AI Task not recognised");
            }
         }
