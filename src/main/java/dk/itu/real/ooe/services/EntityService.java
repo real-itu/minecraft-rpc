@@ -6,6 +6,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import dk.itu.real.ooe.EntitiesOuterClass.*;
 import dk.itu.real.ooe.EntityServiceGrpc.EntityServiceImplBase;
 import dk.itu.real.ooe.SharedMessages.Point;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
@@ -192,7 +193,6 @@ public class EntityService extends EntityServiceImplBase {
 
     private WatchClosestAITask buildWatchClosestTypeTask (Agent agent, AITask_WatchClosest task) throws NoSuchFieldException, IllegalAccessException {
         //TODO: Fix this monstrosity
-        org.spongepowered.api.entity.EntityType type = (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(task.getEntityType().toString().split("_", 2)[1]).get(null);
         return WatchClosestAITask.builder()
                 .chance(task.getChance())
                 .maxDistance(task.getMaxDistance())
@@ -210,7 +210,7 @@ public class EntityService extends EntityServiceImplBase {
     }
 
     private AvoidEntityAITask buildAvoidEntityAITask(Creature agent, AITask_AvoidEntity task) {
-        List<org.spongepowered.api.entity.EntityType> types = task.getEntityTypeList().stream().map(n -> rpcEntityTypeToSpongeEntityType(n)).collect(Collectors.toList());
+        List<org.spongepowered.api.entity.EntityType> types = task.getEntityTypeList().stream().map(this::rpcEntityTypeToSpongeEntityType).collect(Collectors.toList());
         //TODO: what happens if list is empty?
         List<Predicate<Entity>> predicates = types.stream().map(n -> new Predicate<Entity>() {
             @Override
@@ -244,7 +244,6 @@ public class EntityService extends EntityServiceImplBase {
     }
 
     private FindNearestAttackableTargetAITask buildFindNearestTarget(Creature agent, AITask_FindNearestTarget task){
-        //TODO: this might not work
         //TODO: figure out the difference between filter and target class
         FindNearestAttackableTargetAITask.Builder builder = FindNearestAttackableTargetAITask.builder()
                 .chance(task.getChance())
