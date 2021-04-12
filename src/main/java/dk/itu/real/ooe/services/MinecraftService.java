@@ -5,6 +5,8 @@ import dk.itu.real.ooe.Minecraft;
 import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -163,58 +165,70 @@ public class MinecraftService extends MinecraftServiceImplBase {
     @Override
     public void readCube(Cube cube, StreamObserver<Blocks> responseObserver) {
         Task.builder().execute(() -> {
-                    Blocks.Builder builder = Blocks.newBuilder();
-                    World world = Sponge.getServer().getWorlds().iterator().next();
-                    Point min = cube.getMin();
-                    Point max = cube.getMax();
-                    for (int x = min.getX(); x <= max.getX(); x++) {
-                        for (int y = min.getY(); y <= max.getY(); y++) {
-                            for (int z = min.getZ(); z <= max.getZ(); z++) {
-                                String name = world.getLocation(x, y, z).getBlock().getType().getName();
-                                builder.addBlocks(Block.newBuilder()
-                                        .setPosition(Point.newBuilder()
+            Blocks.Builder builder = Blocks.newBuilder();
+            World world = Sponge.getServer().getWorlds().iterator().next();
+            Pair<Vector3d, Vector3d> boundaries = findCubeBoundaries(cube.getMin(), cube.getMax());
+            Vector3d min = boundaries.getLeft();
+            Vector3d max = boundaries.getRight();
+
+            for (int x = (int)min.getX(); x <= max.getX(); x++) {
+                for (int y = (int)min.getY(); y <= max.getY(); y++) {
+                    for (int z = (int)min.getZ(); z <= max.getZ(); z++) {
+                        String name = world.getLocation(x, y, z).getBlock().getType().getName();
+                        builder.addBlocks(Block.newBuilder()
+                                .setPosition(Point.newBuilder()
                                                 .setX(x)
                                                 .setY(y)
                                                 .setZ(z)
-                                                .build()
-                                        )
-                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
-                            }
-                        }
+                                                .build())
+                                .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
                     }
-                    responseObserver.onNext(builder.build());
-                    responseObserver.onCompleted();
                 }
-        ).name("readCube").submit(plugin);
+            }
+            responseObserver.onNext(builder.build());
+            responseObserver.onCompleted();
+        }).name("readCube").submit(plugin);
     }
 
     @Override
     public void fillCube(FillCubeRequest request, StreamObserver<Empty> responseObserver) {
         Task.builder().execute(() -> {
-                    World world = Sponge.getServer().getWorlds().iterator().next();
-                    Cube c = request.getCube();
-                    Point min = c.getMin();
-                    Point max = c.getMax();
-                    BlockType type;
-                    try {
-                        Field typeField = BlockTypes.class.getField(request.getType().toString());
-                        type = (BlockType) typeField.get(null);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+            World world = Sponge.getServer().getWorlds().iterator().next();
+            Cube c = request.getCube();
+            Pair<Vector3d, Vector3d> boundaries = findCubeBoundaries(c.getMin(), c.getMax());
+            Vector3d min = boundaries.getLeft();
+            Vector3d max = boundaries.getRight();
+            BlockType type;
+            try {
+                Field typeField = BlockTypes.class.getField(request.getType().toString());
+                type = (BlockType) typeField.get(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
-                    for (int x = min.getX(); x <= max.getX(); x++) {
-                        for (int y = min.getY(); y <= max.getY(); y++) {
-                            for (int z = min.getZ(); z <= max.getZ(); z++) {
-                                world.setBlockType(x, y, z, type);
-                            }
-                        }
+            for (int x = (int)min.getX(); x <= max.getX(); x++) {
+                for (int y = (int)min.getY(); y <= max.getY(); y++) {
+                    for (int z = (int)min.getZ(); z <= max.getZ(); z++) {
+                        world.setBlockType(x, y, z, type);
                     }
-
-                    responseObserver.onNext(Empty.getDefaultInstance());
-                    responseObserver.onCompleted();
                 }
-        ).name("fillCube").submit(plugin);
+            }
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        }).name("fillCube").submit(plugin);
+    }
+
+    private Pair<Vector3d, Vector3d> findCubeBoundaries(Point p1, Point p2){
+        int minX = Math.min(p1.getX(), p2.getX());
+        int minY = Math.min(p1.getY(), p2.getY());
+        int minZ = Math.min(p1.getZ(), p2.getZ());
+        Vector3d min = new Vector3d(minX, minY, minZ);
+        int maxX = Math.max(p1.getX(), p2.getX());
+        int maxY = Math.max(p1.getY(), p2.getY());
+        int maxZ = Math.max(p1.getZ(), p2.getZ());
+        Vector3d max = new Vector3d(maxX, maxY, maxZ);
+
+        return new ImmutablePair<>(min, max);
     }
 
     public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
