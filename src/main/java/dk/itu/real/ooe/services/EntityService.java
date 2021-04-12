@@ -82,9 +82,9 @@ public class EntityService extends EntityServiceImplBase {
         Task.builder().execute(() -> {
             Entities.Builder builder = Entities.newBuilder();
             World world = Sponge.getServer().getWorlds().iterator().next();
-            for(String id : request.getUuidsList()) {
+            for (String id : request.getUuidsList()) {
                 Optional<Entity> entityOption = world.getEntity(UUID.fromString(id));
-                if(!entityOption.isPresent()){
+                if (!entityOption.isPresent()) {
                     builder.addEntities(dk.itu.real.ooe.EntitiesOuterClass.Entity.newBuilder()
                             //Proto ignores defualt values so there is no need to set type, position and isloaded
                             .setId(id)).build();
@@ -136,9 +136,9 @@ public class EntityService extends EntityServiceImplBase {
     public void updateEntityAI(EntityAIUpdate request, StreamObserver<Empty> responseObserver){
         Task.builder().execute(() -> {
             World world = Sponge.getServer().getWorlds().iterator().next();
-            try{
+            try {
                 Agent agent = (Agent) world.getEntity(UUID.fromString(request.getUuid())).get();
-                if(request.getResetGoals()){
+                if (request.getResetGoals()) {
                     Optional<Goal<Agent>> normalGoal = agent.getGoal(GoalTypes.NORMAL);
                     normalGoal.ifPresent(Goal::clear);
                     Optional<Goal<Agent>> targetGoal = agent.getGoal(GoalTypes.TARGET);
@@ -162,30 +162,30 @@ public class EntityService extends EntityServiceImplBase {
         Goal<Agent> normalGoal = agent.getGoal(GoalTypes.NORMAL).get();
         Goal<Agent> targetGoal = agent.getGoal(GoalTypes.TARGET).get();
         for (AITask task: tasks) {
-            if(task.getTask().is(AITask_Idle.class)){
+            if (task.getTask().is(AITask_Idle.class)) {
                 normalGoal.addTask(task.getPriority(), buildIdleTask(agent));
-            }else if(task.getTask().is(AITask_WatchClosest.class)){
+            } else if (task.getTask().is(AITask_WatchClosest.class)) {
                 AITask_WatchClosest watchClosest = task.getTask().unpack(AITask_WatchClosest.class);
                 normalGoal.addTask(task.getPriority(), buildWatchClosestTypeTask(agent, watchClosest));
-            }else if(task.getTask().is(AITask_AttackLiving.class)){
+            } else if (task.getTask().is(AITask_AttackLiving.class)) {
                 AITask_AttackLiving attackLiving = task.getTask().unpack(AITask_AttackLiving.class);
                 normalGoal.addTask(task.getPriority(), buildAttackLivingAITask((Creature) agent, attackLiving));
-            }else if(task.getTask().is(AITask_AvoidEntityTypes.class)){
+            } else if (task.getTask().is(AITask_AvoidEntityTypes.class)) {
                 AITask_AvoidEntityTypes avoidEntity = task.getTask().unpack(AITask_AvoidEntityTypes.class);
                 normalGoal.addTask(task.getPriority(), buildAvoidEntityTypesAITask((Creature) agent, avoidEntity));
-            } else if(task.getTask().is(AITask_AvoidSpecificEntities.class)){
+            } else if (task.getTask().is(AITask_AvoidSpecificEntities.class)) {
                 AITask_AvoidSpecificEntities avoidEntity = task.getTask().unpack(AITask_AvoidSpecificEntities.class);
                 normalGoal.addTask(task.getPriority(), buildAvoidSpecificEntitiesTask((Creature) agent, avoidEntity));
-            } else if(task.getTask().is(AITask_RangeAgent.class)){
+            } else if(task.getTask().is(AITask_RangeAgent.class)) {
                 AITask_RangeAgent rangeAgent = task.getTask().unpack(AITask_RangeAgent.class);
                 normalGoal.addTask(task.getPriority(), buildRangeAgentAITask((Ranger) agent, rangeAgent));
-            }else if(task.getTask().is(AITask_Wander.class)){
+            } else if(task.getTask().is(AITask_Wander.class)) {
                 AITask_Wander wander = task.getTask().unpack(AITask_Wander.class);
                 normalGoal.addTask(task.getPriority(), buildWanderAITask((Creature) agent, wander));
-            }else if(task.getTask().is(AITask_FindNearestTarget.class)){
+            } else if(task.getTask().is(AITask_FindNearestTarget.class)) {
                 AITask_FindNearestTarget findNearestTarget = task.getTask().unpack(AITask_FindNearestTarget.class);
                 targetGoal.addTask(task.getPriority(), buildFindNearestTarget((Creature) agent, findNearestTarget));
-            }else if(task.getTask().is(AITask_FindSpecificTarget.class)){
+            } else if(task.getTask().is(AITask_FindSpecificTarget.class)) {
                 AITask_FindSpecificTarget findSpecificTarget = task.getTask().unpack(AITask_FindSpecificTarget.class);
                 targetGoal.addTask(task.getPriority(), buildFindSpecificTargets((Creature) agent, findSpecificTarget));
             } else {
@@ -209,7 +209,7 @@ public class EntityService extends EntityServiceImplBase {
     private AttackLivingAITask buildAttackLivingAITask(Creature agent, AITask_AttackLiving task){
         AttackLivingAITask.Builder newTaskBuilder = AttackLivingAITask.builder()
                 .speed(task.getSpeed());
-        if(task.getHasLongMemory()){
+        if (task.getHasLongMemory()) {
             newTaskBuilder.longMemory();
         }
        return newTaskBuilder.build(agent);
@@ -271,9 +271,9 @@ public class EntityService extends EntityServiceImplBase {
                 .chance(task.getChance())
                 .target(rpcEntityTypeToSpongeEntityType(task.getTargetEntity()).getEntityClass().asSubclass(Living.class));
 
-        if(task.getOnlyNearby())
+        if (task.getOnlyNearby())
             builder.onlyNearby();
-        if(task.getShouldCheckSight())
+        if (task.getShouldCheckSight())
             builder.checkSight();
 
         return builder.build(agent);
@@ -294,9 +294,9 @@ public class EntityService extends EntityServiceImplBase {
                 .filter(targetSelector)
                 .target(Living.class);
 
-        if(task.getOnlyNearby())
+        if (task.getOnlyNearby())
             builder.onlyNearby();
-        if(task.getShouldCheckSight())
+        if (task.getShouldCheckSight())
             builder.checkSight();
 
         return builder.build(agent);

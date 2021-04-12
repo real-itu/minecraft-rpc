@@ -5,8 +5,6 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 import entities_pb2_grpc
 from entities_pb2 import *
-import sharedMessages_pb2_grpc
-from sharedMessages_pb2 import *
 
 channel = grpc.insecure_channel('localhost:5001')
 entityClient = entities_pb2_grpc.EntityServiceStub(channel)
