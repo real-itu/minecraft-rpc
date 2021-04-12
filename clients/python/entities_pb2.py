@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0e\x65ntities.proto\x12\x0f\x64k.itu.real.ooe\x1a\x1bgoogle/protobuf/empty.proto\x1a\x19google/protobuf/any.proto\x1a\x14sharedMessages.proto\"\x16\n\x05Uuids\x12\r\n\x05uuids\x18\x01 \x03(\t\"5\n\x08\x45ntities\x12)\n\x08\x65ntities\x18\x01 \x03(\x0b\x32\x17.dk.itu.real.ooe.Entity\"{\n\x06\x45ntity\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12(\n\x08position\x18\x03 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\x12\x10\n\x08isLoaded\x18\x04 \x01(\x08\"D\n\rSpawnEntities\x12\x33\n\rspawnEntities\x18\x01 \x03(\x0b\x32\x1c.dk.itu.real.ooe.SpawnEntity\"g\n\x0bSpawnEntity\x12)\n\x04type\x18\x01 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12-\n\rspawnPosition\x18\x02 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\"@\n\x06Sphere\x12&\n\x06\x63\x65nter\x18\x01 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\x12\x0e\n\x06radius\x18\x02 \x01(\x01\"\\\n\x0e\x45ntityAIUpdate\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x12\n\nresetGoals\x18\x02 \x01(\x08\x12(\n\x07\x41ITasks\x18\x03 \x03(\x0b\x32\x17.dk.itu.real.ooe.AITask\">\n\x06\x41ITask\x12\x10\n\x08priority\x18\x01 \x01(\x05\x12\"\n\x04task\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any\"\r\n\x0b\x41ITask_Idle\"k\n\x13\x41ITask_WatchClosest\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x02\x12\x13\n\x0bmaxDistance\x18\x02 \x01(\x02\x12/\n\nentityType\x18\x03 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\";\n\x13\x41ITask_AttackLiving\x12\r\n\x05speed\x18\x01 \x01(\x01\x12\x15\n\rhasLongMemory\x18\x02 \x01(\x08\"\x8d\x01\n\x12\x41ITask_AvoidEntity\x12\x17\n\x0f\x63loseRangeSpeed\x18\x01 \x01(\x01\x12\x15\n\rfarRangeSpeed\x18\x02 \x01(\x01\x12\x16\n\x0esearchDistance\x18\x03 \x01(\x02\x12/\n\nentityType\x18\x04 \x03(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\"Y\n\x11\x41ITask_RangeAgent\x12\x14\n\x0c\x61ttackRadius\x18\x01 \x01(\x02\x12\x1b\n\x13\x64\x65layBetweenAttacks\x18\x02 \x01(\x05\x12\x11\n\tmoveSpeed\x18\x03 \x01(\x01\".\n\rAITask_Wander\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x05\x12\r\n\x05speed\x18\x02 \x01(\x01\"\x8b\x01\n\x18\x41ITask_FindNearestTarget\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x05\x12\x31\n\x0ctargetEntity\x18\x02 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12\x12\n\nonlyNearby\x18\x03 \x01(\x08\x12\x18\n\x10shouldCheckSight\x18\x04 \x01(\x08*\x82\x10\n\nEntityType\x12\x1c\n\x18\x45NTITY_AREA_EFFECT_CLOUD\x10\x00\x12\x16\n\x12\x45NTITY_ARMOR_STAND\x10\x01\x12\x0e\n\nENTITY_BAT\x10\x02\x12\x10\n\x0c\x45NTITY_BLAZE\x10\x03\x12\x0f\n\x0b\x45NTITY_BOAT\x10\x04\x12\x16\n\x12\x45NTITY_CAVE_SPIDER\x10\x05\x12\x1b\n\x17\x45NTITY_CHESTED_MINECART\x10\x06\x12\x12\n\x0e\x45NTITY_CHICKEN\x10\x07\x12 \n\x1c\x45NTITY_COMMANDBLOCK_MINECART\x10\x08\x12\x17\n\x13\x45NTITY_COMPLEX_PART\x10\t\x12\x0e\n\nENTITY_COW\x10\n\x12\x12\n\x0e\x45NTITY_CREEPER\x10\x0b\x12\x11\n\rENTITY_DONKEY\x10\x0c\x12\x1a\n\x16\x45NTITY_DRAGON_FIREBALL\x10\r\x12\x0e\n\nENTITY_EGG\x10\x0e\x12\x19\n\x15\x45NTITY_ELDER_GUARDIAN\x10\x0f\x12\x18\n\x14\x45NTITY_ENDER_CRYSTAL\x10\x10\x12\x17\n\x13\x45NTITY_ENDER_DRAGON\x10\x11\x12\x16\n\x12\x45NTITY_ENDER_PEARL\x10\x12\x12\x13\n\x0f\x45NTITY_ENDERMAN\x10\x13\x12\x14\n\x10\x45NTITY_ENDERMITE\x10\x14\x12\x1a\n\x16\x45NTITY_EVOCATION_FANGS\x10\x15\x12\x1c\n\x18\x45NTITY_EVOCATION_ILLAGER\x10\x16\x12\x19\n\x15\x45NTITY_EXPERIENCE_ORB\x10\x17\x12\x17\n\x13\x45NTITY_EYE_OF_ENDER\x10\x18\x12\x18\n\x14\x45NTITY_FALLING_BLOCK\x10\x19\x12\x13\n\x0f\x45NTITY_FIREBALL\x10\x1a\x12\x13\n\x0f\x45NTITY_FIREWORK\x10\x1b\x12\x17\n\x13\x45NTITY_FISHING_HOOK\x10\x1c\x12\x1b\n\x17\x45NTITY_FURNACE_MINECART\x10\x1d\x12\x10\n\x0c\x45NTITY_GHAST\x10\x1e\x12\x10\n\x0c\x45NTITY_GIANT\x10\x1f\x12\x13\n\x0f\x45NTITY_GUARDIAN\x10 \x12\x1a\n\x16\x45NTITY_HOPPER_MINECART\x10!\x12\x10\n\x0c\x45NTITY_HORSE\x10\"\x12\x10\n\x0c\x45NTITY_HUMAN\x10#\x12\x0f\n\x0b\x45NTITY_HUSK\x10$\x12\x1b\n\x17\x45NTITY_ILLUSION_ILLAGER\x10%\x12\x15\n\x11\x45NTITY_IRON_GOLEM\x10&\x12\x0f\n\x0b\x45NTITY_ITEM\x10\'\x12\x15\n\x11\x45NTITY_ITEM_FRAME\x10(\x12\x16\n\x12\x45NTITY_LEASH_HITCH\x10)\x12\x14\n\x10\x45NTITY_LIGHTNING\x10*\x12\x10\n\x0c\x45NTITY_LLAMA\x10+\x12\x15\n\x11\x45NTITY_LLAMA_SPIT\x10,\x12\x15\n\x11\x45NTITY_MAGMA_CUBE\x10-\x12\x1f\n\x1b\x45NTITY_MOB_SPAWNER_MINECART\x10.\x12\x0f\n\x0b\x45NTITY_MULE\x10/\x12\x17\n\x13\x45NTITY_MUSHROOM_COW\x10\x30\x12\x11\n\rENTITY_OCELOT\x10\x31\x12\x13\n\x0f\x45NTITY_PAINTING\x10\x32\x12\x11\n\rENTITY_PARROT\x10\x33\x12\x0e\n\nENTITY_PIG\x10\x34\x12\x15\n\x11\x45NTITY_PIG_ZOMBIE\x10\x35\x12\x11\n\rENTITY_PLAYER\x10\x36\x12\x15\n\x11\x45NTITY_POLAR_BEAR\x10\x37\x12\x15\n\x11\x45NTITY_PRIMED_TNT\x10\x38\x12\x11\n\rENTITY_RABBIT\x10\x39\x12\x1c\n\x18\x45NTITY_RIDEABLE_MINECART\x10:\x12\x10\n\x0c\x45NTITY_SHEEP\x10;\x12\x12\n\x0e\x45NTITY_SHULKER\x10<\x12\x19\n\x15\x45NTITY_SHULKER_BULLET\x10=\x12\x15\n\x11\x45NTITY_SILVERFISH\x10>\x12\x13\n\x0f\x45NTITY_SKELETON\x10?\x12\x19\n\x15\x45NTITY_SKELETON_HORSE\x10@\x12\x10\n\x0c\x45NTITY_SLIME\x10\x41\x12\x19\n\x15\x45NTITY_SMALL_FIREBALL\x10\x42\x12\x13\n\x0f\x45NTITY_SNOWBALL\x10\x43\x12\x12\n\x0e\x45NTITY_SNOWMAN\x10\x44\x12\x19\n\x15\x45NTITY_SPECTRAL_ARROW\x10\x45\x12\x11\n\rENTITY_SPIDER\x10\x46\x12\x18\n\x14\x45NTITY_SPLASH_POTION\x10G\x12\x10\n\x0c\x45NTITY_SQUID\x10H\x12\x10\n\x0c\x45NTITY_STRAY\x10I\x12\x1c\n\x18\x45NTITY_THROWN_EXP_BOTTLE\x10J\x12\x17\n\x13\x45NTITY_TIPPED_ARROW\x10K\x12\x17\n\x13\x45NTITY_TNT_MINECART\x10L\x12\x12\n\x0e\x45NTITY_UNKNOWN\x10M\x12\x0e\n\nENTITY_VEX\x10N\x12\x13\n\x0f\x45NTITY_VILLAGER\x10O\x12\x1e\n\x1a\x45NTITY_VINDICATION_ILLAGER\x10P\x12\x12\n\x0e\x45NTITY_WEATHER\x10Q\x12\x10\n\x0c\x45NTITY_WITCH\x10R\x12\x11\n\rENTITY_WITHER\x10S\x12\x1a\n\x16\x45NTITY_WITHER_SKELETON\x10T\x12\x17\n\x13\x45NTITY_WITHER_SKULL\x10U\x12\x0f\n\x0b\x45NTITY_WOLF\x10V\x12\x11\n\rENTITY_ZOMBIE\x10W\x12\x17\n\x13\x45NTITY_ZOMBIE_HORSE\x10X\x12\x1a\n\x16\x45NTITY_ZOMBIE_VILLAGER\x10Y2\xb2\x02\n\rEntityService\x12\x41\n\x0creadEntities\x12\x16.dk.itu.real.ooe.Uuids\x1a\x19.dk.itu.real.ooe.Entities\x12G\n\rspawnEntities\x12\x1e.dk.itu.real.ooe.SpawnEntities\x1a\x16.dk.itu.real.ooe.Uuids\x12J\n\x14readEntitiesInSphere\x12\x17.dk.itu.real.ooe.Sphere\x1a\x19.dk.itu.real.ooe.Entities\x12I\n\x0eupdateEntityAI\x12\x1f.dk.itu.real.ooe.EntityAIUpdate\x1a\x16.google.protobuf.Emptyb\x06proto3'
+  serialized_pb=b'\n\x0e\x65ntities.proto\x12\x0f\x64k.itu.real.ooe\x1a\x1bgoogle/protobuf/empty.proto\x1a\x19google/protobuf/any.proto\x1a\x14sharedMessages.proto\"\x16\n\x05Uuids\x12\r\n\x05uuids\x18\x01 \x03(\t\"5\n\x08\x45ntities\x12)\n\x08\x65ntities\x18\x01 \x03(\x0b\x32\x17.dk.itu.real.ooe.Entity\"{\n\x06\x45ntity\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x04type\x18\x02 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12(\n\x08position\x18\x03 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\x12\x10\n\x08isLoaded\x18\x04 \x01(\x08\"D\n\rSpawnEntities\x12\x33\n\rspawnEntities\x18\x01 \x03(\x0b\x32\x1c.dk.itu.real.ooe.SpawnEntity\"g\n\x0bSpawnEntity\x12)\n\x04type\x18\x01 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12-\n\rspawnPosition\x18\x02 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\"@\n\x06Sphere\x12&\n\x06\x63\x65nter\x18\x01 \x01(\x0b\x32\x16.dk.itu.real.ooe.Point\x12\x0e\n\x06radius\x18\x02 \x01(\x01\"\\\n\x0e\x45ntityAIUpdate\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x12\n\nresetGoals\x18\x02 \x01(\x08\x12(\n\x07\x41ITasks\x18\x03 \x03(\x0b\x32\x17.dk.itu.real.ooe.AITask\">\n\x06\x41ITask\x12\x10\n\x08priority\x18\x01 \x01(\x05\x12\"\n\x04task\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any\"\r\n\x0b\x41ITask_Idle\"k\n\x13\x41ITask_WatchClosest\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x02\x12\x13\n\x0bmaxDistance\x18\x02 \x01(\x02\x12/\n\nentityType\x18\x03 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\";\n\x13\x41ITask_AttackLiving\x12\r\n\x05speed\x18\x01 \x01(\x01\x12\x15\n\rhasLongMemory\x18\x02 \x01(\x08\"\x92\x01\n\x17\x41ITask_AvoidEntityTypes\x12\x17\n\x0f\x63loseRangeSpeed\x18\x01 \x01(\x01\x12\x15\n\rfarRangeSpeed\x18\x02 \x01(\x01\x12\x16\n\x0esearchDistance\x18\x03 \x01(\x02\x12/\n\nentityType\x18\x04 \x03(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\"u\n\x1c\x41ITask_AvoidSpecificEntities\x12\x17\n\x0f\x63loseRangeSpeed\x18\x01 \x01(\x01\x12\x15\n\rfarRangeSpeed\x18\x02 \x01(\x01\x12\x16\n\x0esearchDistance\x18\x03 \x01(\x02\x12\r\n\x05uuids\x18\x04 \x03(\t\"Y\n\x11\x41ITask_RangeAgent\x12\x14\n\x0c\x61ttackRadius\x18\x01 \x01(\x02\x12\x1b\n\x13\x64\x65layBetweenAttacks\x18\x02 \x01(\x05\x12\x11\n\tmoveSpeed\x18\x03 \x01(\x01\".\n\rAITask_Wander\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x05\x12\r\n\x05speed\x18\x02 \x01(\x01\"\x8b\x01\n\x18\x41ITask_FindNearestTarget\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x05\x12\x31\n\x0ctargetEntity\x18\x02 \x01(\x0e\x32\x1b.dk.itu.real.ooe.EntityType\x12\x12\n\nonlyNearby\x18\x03 \x01(\x08\x12\x18\n\x10shouldCheckSight\x18\x04 \x01(\x08\"h\n\x19\x41ITask_FindSpecificTarget\x12\x0e\n\x06\x63hance\x18\x01 \x01(\x05\x12\r\n\x05uuids\x18\x02 \x03(\t\x12\x12\n\nonlyNearby\x18\x03 \x01(\x08\x12\x18\n\x10shouldCheckSight\x18\x04 \x01(\x08*\x82\x10\n\nEntityType\x12\x1c\n\x18\x45NTITY_AREA_EFFECT_CLOUD\x10\x00\x12\x16\n\x12\x45NTITY_ARMOR_STAND\x10\x01\x12\x0e\n\nENTITY_BAT\x10\x02\x12\x10\n\x0c\x45NTITY_BLAZE\x10\x03\x12\x0f\n\x0b\x45NTITY_BOAT\x10\x04\x12\x16\n\x12\x45NTITY_CAVE_SPIDER\x10\x05\x12\x1b\n\x17\x45NTITY_CHESTED_MINECART\x10\x06\x12\x12\n\x0e\x45NTITY_CHICKEN\x10\x07\x12 \n\x1c\x45NTITY_COMMANDBLOCK_MINECART\x10\x08\x12\x17\n\x13\x45NTITY_COMPLEX_PART\x10\t\x12\x0e\n\nENTITY_COW\x10\n\x12\x12\n\x0e\x45NTITY_CREEPER\x10\x0b\x12\x11\n\rENTITY_DONKEY\x10\x0c\x12\x1a\n\x16\x45NTITY_DRAGON_FIREBALL\x10\r\x12\x0e\n\nENTITY_EGG\x10\x0e\x12\x19\n\x15\x45NTITY_ELDER_GUARDIAN\x10\x0f\x12\x18\n\x14\x45NTITY_ENDER_CRYSTAL\x10\x10\x12\x17\n\x13\x45NTITY_ENDER_DRAGON\x10\x11\x12\x16\n\x12\x45NTITY_ENDER_PEARL\x10\x12\x12\x13\n\x0f\x45NTITY_ENDERMAN\x10\x13\x12\x14\n\x10\x45NTITY_ENDERMITE\x10\x14\x12\x1a\n\x16\x45NTITY_EVOCATION_FANGS\x10\x15\x12\x1c\n\x18\x45NTITY_EVOCATION_ILLAGER\x10\x16\x12\x19\n\x15\x45NTITY_EXPERIENCE_ORB\x10\x17\x12\x17\n\x13\x45NTITY_EYE_OF_ENDER\x10\x18\x12\x18\n\x14\x45NTITY_FALLING_BLOCK\x10\x19\x12\x13\n\x0f\x45NTITY_FIREBALL\x10\x1a\x12\x13\n\x0f\x45NTITY_FIREWORK\x10\x1b\x12\x17\n\x13\x45NTITY_FISHING_HOOK\x10\x1c\x12\x1b\n\x17\x45NTITY_FURNACE_MINECART\x10\x1d\x12\x10\n\x0c\x45NTITY_GHAST\x10\x1e\x12\x10\n\x0c\x45NTITY_GIANT\x10\x1f\x12\x13\n\x0f\x45NTITY_GUARDIAN\x10 \x12\x1a\n\x16\x45NTITY_HOPPER_MINECART\x10!\x12\x10\n\x0c\x45NTITY_HORSE\x10\"\x12\x10\n\x0c\x45NTITY_HUMAN\x10#\x12\x0f\n\x0b\x45NTITY_HUSK\x10$\x12\x1b\n\x17\x45NTITY_ILLUSION_ILLAGER\x10%\x12\x15\n\x11\x45NTITY_IRON_GOLEM\x10&\x12\x0f\n\x0b\x45NTITY_ITEM\x10\'\x12\x15\n\x11\x45NTITY_ITEM_FRAME\x10(\x12\x16\n\x12\x45NTITY_LEASH_HITCH\x10)\x12\x14\n\x10\x45NTITY_LIGHTNING\x10*\x12\x10\n\x0c\x45NTITY_LLAMA\x10+\x12\x15\n\x11\x45NTITY_LLAMA_SPIT\x10,\x12\x15\n\x11\x45NTITY_MAGMA_CUBE\x10-\x12\x1f\n\x1b\x45NTITY_MOB_SPAWNER_MINECART\x10.\x12\x0f\n\x0b\x45NTITY_MULE\x10/\x12\x17\n\x13\x45NTITY_MUSHROOM_COW\x10\x30\x12\x11\n\rENTITY_OCELOT\x10\x31\x12\x13\n\x0f\x45NTITY_PAINTING\x10\x32\x12\x11\n\rENTITY_PARROT\x10\x33\x12\x0e\n\nENTITY_PIG\x10\x34\x12\x15\n\x11\x45NTITY_PIG_ZOMBIE\x10\x35\x12\x11\n\rENTITY_PLAYER\x10\x36\x12\x15\n\x11\x45NTITY_POLAR_BEAR\x10\x37\x12\x15\n\x11\x45NTITY_PRIMED_TNT\x10\x38\x12\x11\n\rENTITY_RABBIT\x10\x39\x12\x1c\n\x18\x45NTITY_RIDEABLE_MINECART\x10:\x12\x10\n\x0c\x45NTITY_SHEEP\x10;\x12\x12\n\x0e\x45NTITY_SHULKER\x10<\x12\x19\n\x15\x45NTITY_SHULKER_BULLET\x10=\x12\x15\n\x11\x45NTITY_SILVERFISH\x10>\x12\x13\n\x0f\x45NTITY_SKELETON\x10?\x12\x19\n\x15\x45NTITY_SKELETON_HORSE\x10@\x12\x10\n\x0c\x45NTITY_SLIME\x10\x41\x12\x19\n\x15\x45NTITY_SMALL_FIREBALL\x10\x42\x12\x13\n\x0f\x45NTITY_SNOWBALL\x10\x43\x12\x12\n\x0e\x45NTITY_SNOWMAN\x10\x44\x12\x19\n\x15\x45NTITY_SPECTRAL_ARROW\x10\x45\x12\x11\n\rENTITY_SPIDER\x10\x46\x12\x18\n\x14\x45NTITY_SPLASH_POTION\x10G\x12\x10\n\x0c\x45NTITY_SQUID\x10H\x12\x10\n\x0c\x45NTITY_STRAY\x10I\x12\x1c\n\x18\x45NTITY_THROWN_EXP_BOTTLE\x10J\x12\x17\n\x13\x45NTITY_TIPPED_ARROW\x10K\x12\x17\n\x13\x45NTITY_TNT_MINECART\x10L\x12\x12\n\x0e\x45NTITY_UNKNOWN\x10M\x12\x0e\n\nENTITY_VEX\x10N\x12\x13\n\x0f\x45NTITY_VILLAGER\x10O\x12\x1e\n\x1a\x45NTITY_VINDICATION_ILLAGER\x10P\x12\x12\n\x0e\x45NTITY_WEATHER\x10Q\x12\x10\n\x0c\x45NTITY_WITCH\x10R\x12\x11\n\rENTITY_WITHER\x10S\x12\x1a\n\x16\x45NTITY_WITHER_SKELETON\x10T\x12\x17\n\x13\x45NTITY_WITHER_SKULL\x10U\x12\x0f\n\x0b\x45NTITY_WOLF\x10V\x12\x11\n\rENTITY_ZOMBIE\x10W\x12\x17\n\x13\x45NTITY_ZOMBIE_HORSE\x10X\x12\x1a\n\x16\x45NTITY_ZOMBIE_VILLAGER\x10Y2\xb2\x02\n\rEntityService\x12\x41\n\x0creadEntities\x12\x16.dk.itu.real.ooe.Uuids\x1a\x19.dk.itu.real.ooe.Entities\x12G\n\rspawnEntities\x12\x1e.dk.itu.real.ooe.SpawnEntities\x1a\x16.dk.itu.real.ooe.Uuids\x12J\n\x14readEntitiesInSphere\x12\x17.dk.itu.real.ooe.Sphere\x1a\x19.dk.itu.real.ooe.Entities\x12I\n\x0eupdateEntityAI\x12\x1f.dk.itu.real.ooe.EntityAIUpdate\x1a\x16.google.protobuf.Emptyb\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_any__pb2.DESCRIPTOR,sharedMessages__pb2.DESCRIPTOR,])
 
@@ -487,8 +487,8 @@ _ENTITYTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1327,
-  serialized_end=3377,
+  serialized_start=1557,
+  serialized_end=3607,
 )
 _sym_db.RegisterEnumDescriptor(_ENTITYTYPE)
 
@@ -1008,37 +1008,37 @@ _AITASK_ATTACKLIVING = _descriptor.Descriptor(
 )
 
 
-_AITASK_AVOIDENTITY = _descriptor.Descriptor(
-  name='AITask_AvoidEntity',
-  full_name='dk.itu.real.ooe.AITask_AvoidEntity',
+_AITASK_AVOIDENTITYTYPES = _descriptor.Descriptor(
+  name='AITask_AvoidEntityTypes',
+  full_name='dk.itu.real.ooe.AITask_AvoidEntityTypes',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='closeRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidEntity.closeRangeSpeed', index=0,
+      name='closeRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidEntityTypes.closeRangeSpeed', index=0,
       number=1, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='farRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidEntity.farRangeSpeed', index=1,
+      name='farRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidEntityTypes.farRangeSpeed', index=1,
       number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='searchDistance', full_name='dk.itu.real.ooe.AITask_AvoidEntity.searchDistance', index=2,
+      name='searchDistance', full_name='dk.itu.real.ooe.AITask_AvoidEntityTypes.searchDistance', index=2,
       number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='entityType', full_name='dk.itu.real.ooe.AITask_AvoidEntity.entityType', index=3,
+      name='entityType', full_name='dk.itu.real.ooe.AITask_AvoidEntityTypes.entityType', index=3,
       number=4, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -1057,7 +1057,60 @@ _AITASK_AVOIDENTITY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=902,
-  serialized_end=1043,
+  serialized_end=1048,
+)
+
+
+_AITASK_AVOIDSPECIFICENTITIES = _descriptor.Descriptor(
+  name='AITask_AvoidSpecificEntities',
+  full_name='dk.itu.real.ooe.AITask_AvoidSpecificEntities',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='closeRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidSpecificEntities.closeRangeSpeed', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='farRangeSpeed', full_name='dk.itu.real.ooe.AITask_AvoidSpecificEntities.farRangeSpeed', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='searchDistance', full_name='dk.itu.real.ooe.AITask_AvoidSpecificEntities.searchDistance', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='uuids', full_name='dk.itu.real.ooe.AITask_AvoidSpecificEntities.uuids', index=3,
+      number=4, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1050,
+  serialized_end=1167,
 )
 
 
@@ -1102,8 +1155,8 @@ _AITASK_RANGEAGENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1045,
-  serialized_end=1134,
+  serialized_start=1169,
+  serialized_end=1258,
 )
 
 
@@ -1141,8 +1194,8 @@ _AITASK_WANDER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1136,
-  serialized_end=1182,
+  serialized_start=1260,
+  serialized_end=1306,
 )
 
 
@@ -1194,8 +1247,61 @@ _AITASK_FINDNEARESTTARGET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1185,
-  serialized_end=1324,
+  serialized_start=1309,
+  serialized_end=1448,
+)
+
+
+_AITASK_FINDSPECIFICTARGET = _descriptor.Descriptor(
+  name='AITask_FindSpecificTarget',
+  full_name='dk.itu.real.ooe.AITask_FindSpecificTarget',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='chance', full_name='dk.itu.real.ooe.AITask_FindSpecificTarget.chance', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='uuids', full_name='dk.itu.real.ooe.AITask_FindSpecificTarget.uuids', index=1,
+      number=2, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='onlyNearby', full_name='dk.itu.real.ooe.AITask_FindSpecificTarget.onlyNearby', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='shouldCheckSight', full_name='dk.itu.real.ooe.AITask_FindSpecificTarget.shouldCheckSight', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1450,
+  serialized_end=1554,
 )
 
 _ENTITIES.fields_by_name['entities'].message_type = _ENTITY
@@ -1208,7 +1314,7 @@ _SPHERE.fields_by_name['center'].message_type = sharedMessages__pb2._POINT
 _ENTITYAIUPDATE.fields_by_name['AITasks'].message_type = _AITASK
 _AITASK.fields_by_name['task'].message_type = google_dot_protobuf_dot_any__pb2._ANY
 _AITASK_WATCHCLOSEST.fields_by_name['entityType'].enum_type = _ENTITYTYPE
-_AITASK_AVOIDENTITY.fields_by_name['entityType'].enum_type = _ENTITYTYPE
+_AITASK_AVOIDENTITYTYPES.fields_by_name['entityType'].enum_type = _ENTITYTYPE
 _AITASK_FINDNEARESTTARGET.fields_by_name['targetEntity'].enum_type = _ENTITYTYPE
 DESCRIPTOR.message_types_by_name['Uuids'] = _UUIDS
 DESCRIPTOR.message_types_by_name['Entities'] = _ENTITIES
@@ -1221,10 +1327,12 @@ DESCRIPTOR.message_types_by_name['AITask'] = _AITASK
 DESCRIPTOR.message_types_by_name['AITask_Idle'] = _AITASK_IDLE
 DESCRIPTOR.message_types_by_name['AITask_WatchClosest'] = _AITASK_WATCHCLOSEST
 DESCRIPTOR.message_types_by_name['AITask_AttackLiving'] = _AITASK_ATTACKLIVING
-DESCRIPTOR.message_types_by_name['AITask_AvoidEntity'] = _AITASK_AVOIDENTITY
+DESCRIPTOR.message_types_by_name['AITask_AvoidEntityTypes'] = _AITASK_AVOIDENTITYTYPES
+DESCRIPTOR.message_types_by_name['AITask_AvoidSpecificEntities'] = _AITASK_AVOIDSPECIFICENTITIES
 DESCRIPTOR.message_types_by_name['AITask_RangeAgent'] = _AITASK_RANGEAGENT
 DESCRIPTOR.message_types_by_name['AITask_Wander'] = _AITASK_WANDER
 DESCRIPTOR.message_types_by_name['AITask_FindNearestTarget'] = _AITASK_FINDNEARESTTARGET
+DESCRIPTOR.message_types_by_name['AITask_FindSpecificTarget'] = _AITASK_FINDSPECIFICTARGET
 DESCRIPTOR.enum_types_by_name['EntityType'] = _ENTITYTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -1305,12 +1413,19 @@ AITask_AttackLiving = _reflection.GeneratedProtocolMessageType('AITask_AttackLiv
   })
 _sym_db.RegisterMessage(AITask_AttackLiving)
 
-AITask_AvoidEntity = _reflection.GeneratedProtocolMessageType('AITask_AvoidEntity', (_message.Message,), {
-  'DESCRIPTOR' : _AITASK_AVOIDENTITY,
+AITask_AvoidEntityTypes = _reflection.GeneratedProtocolMessageType('AITask_AvoidEntityTypes', (_message.Message,), {
+  'DESCRIPTOR' : _AITASK_AVOIDENTITYTYPES,
   '__module__' : 'entities_pb2'
-  # @@protoc_insertion_point(class_scope:dk.itu.real.ooe.AITask_AvoidEntity)
+  # @@protoc_insertion_point(class_scope:dk.itu.real.ooe.AITask_AvoidEntityTypes)
   })
-_sym_db.RegisterMessage(AITask_AvoidEntity)
+_sym_db.RegisterMessage(AITask_AvoidEntityTypes)
+
+AITask_AvoidSpecificEntities = _reflection.GeneratedProtocolMessageType('AITask_AvoidSpecificEntities', (_message.Message,), {
+  'DESCRIPTOR' : _AITASK_AVOIDSPECIFICENTITIES,
+  '__module__' : 'entities_pb2'
+  # @@protoc_insertion_point(class_scope:dk.itu.real.ooe.AITask_AvoidSpecificEntities)
+  })
+_sym_db.RegisterMessage(AITask_AvoidSpecificEntities)
 
 AITask_RangeAgent = _reflection.GeneratedProtocolMessageType('AITask_RangeAgent', (_message.Message,), {
   'DESCRIPTOR' : _AITASK_RANGEAGENT,
@@ -1333,6 +1448,13 @@ AITask_FindNearestTarget = _reflection.GeneratedProtocolMessageType('AITask_Find
   })
 _sym_db.RegisterMessage(AITask_FindNearestTarget)
 
+AITask_FindSpecificTarget = _reflection.GeneratedProtocolMessageType('AITask_FindSpecificTarget', (_message.Message,), {
+  'DESCRIPTOR' : _AITASK_FINDSPECIFICTARGET,
+  '__module__' : 'entities_pb2'
+  # @@protoc_insertion_point(class_scope:dk.itu.real.ooe.AITask_FindSpecificTarget)
+  })
+_sym_db.RegisterMessage(AITask_FindSpecificTarget)
+
 
 
 _ENTITYSERVICE = _descriptor.ServiceDescriptor(
@@ -1342,8 +1464,8 @@ _ENTITYSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=3380,
-  serialized_end=3686,
+  serialized_start=3610,
+  serialized_end=3916,
   methods=[
   _descriptor.MethodDescriptor(
     name='readEntities',

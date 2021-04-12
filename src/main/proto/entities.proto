@@ -17,13 +17,16 @@ service EntityService {
     /** Read entities in specified radius */
     rpc readEntitiesInSphere(Sphere) returns (Entities);
 
+    /** Set the AI Tasks for an entity */
     rpc updateEntityAI(EntityAIUpdate) returns (google.protobuf.Empty);
 }
 
+/** Unique ids of spawned entities */
 message Uuids {
     repeated string uuids = 1;
 }
 
+/** A collection of entities */
 message Entities {
     repeated Entity entities = 1;
 }
@@ -36,64 +39,82 @@ message Entity {
     bool isLoaded = 4;
 }
 
+/** A collection of spawn messages */
 message SpawnEntities {
     repeated SpawnEntity spawnEntities = 1;
 }
 
+/** Message for spawning entities */
 message SpawnEntity {
     EntityType type = 1;
     Point spawnPosition = 2;
 }
 
+/** A sphere area in 3d space */
 message Sphere {
     Point center = 1;
     double radius = 2;
 }
 
+/** A collection of tasks applied to a specific entity */
 message EntityAIUpdate {
     string uuid = 1;
     bool resetGoals = 2;
     repeated AITask AITasks = 3;
 }
 
+/** A single task and its priority */
 message AITask {
     int32 priority = 1;
     google.protobuf.Any task = 2;
 }
 
-message AITask_Idle {
+/** A task that makes entities idle */
+message AITask_Idle {}
 
-}
-
+/** A task that makes an entity watch other entities */
 message AITask_WatchClosest {
     float chance = 1;
     float maxDistance = 2;
     EntityType entityType = 3;
 }
 
+/** A task that makes an entity attack their targets */
 message AITask_AttackLiving {
     double speed = 1;
     bool hasLongMemory = 2;
 }
 
-message AITask_AvoidEntity {
+/** A task that makes an entity run away from other types */
+message AITask_AvoidEntityTypes {
     double closeRangeSpeed = 1;
     double farRangeSpeed = 2;
     float searchDistance = 3;
     repeated EntityType entityType = 4;
 }
 
+/** A task that makes an entity run away other entities based on unique ids */
+message AITask_AvoidSpecificEntities {
+    double closeRangeSpeed = 1;
+    double farRangeSpeed = 2;
+    float searchDistance = 3;
+    repeated string uuids = 4;
+}
+
+/** A task that makes an entity attack with ranged weapons */
 message AITask_RangeAgent {
     float attackRadius = 1;
     int32 delayBetweenAttacks = 2;
     double moveSpeed = 3;
 }
 
+/** A task that makes an entity wander aimlessly */
 message AITask_Wander {
     int32 chance = 1;
     double speed = 2;
 }
 
+/** A target selector for entity types */
 message AITask_FindNearestTarget {
     int32 chance = 1;
     EntityType targetEntity = 2;
@@ -101,6 +122,15 @@ message AITask_FindNearestTarget {
     bool shouldCheckSight = 4;
 }
 
+/** A target selector based in entity ids */
+message AITask_FindSpecificTarget {
+    int32 chance = 1;
+    repeated string uuids = 2;
+    bool onlyNearby = 3;
+    bool shouldCheckSight = 4;
+}
+
+/** Types of entities that can be spawned in Minecraft 1.12 */
 enum EntityType {
     ENTITY_AREA_EFFECT_CLOUD=0;
     ENTITY_ARMOR_STAND=1;

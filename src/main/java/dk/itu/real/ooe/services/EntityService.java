@@ -136,28 +136,30 @@ public class EntityService extends EntityServiceImplBase {
     public void updateEntityAI(EntityAIUpdate request, StreamObserver<Empty> responseObserver){
         Task.builder().execute(() -> {
             World world = Sponge.getServer().getWorlds().iterator().next();
-            Agent agent = (Agent) world.getEntity(UUID.fromString(request.getUuid())).get();
-            if(request.getResetGoals()){
-                //Clear goals if they exist
-                Optional<Goal<Agent>> normalGoal = agent.getGoal(GoalTypes.NORMAL);
-                normalGoal.ifPresent(Goal::clear);
-                Optional<Goal<Agent>> targetGoal = agent.getGoal(GoalTypes.TARGET);
-                targetGoal.ifPresent(Goal::clear);
-            }
-            try {
+            try{
+                Agent agent = (Agent) world.getEntity(UUID.fromString(request.getUuid())).get();
+                if(request.getResetGoals()){
+                    Optional<Goal<Agent>> normalGoal = agent.getGoal(GoalTypes.NORMAL);
+                    normalGoal.ifPresent(Goal::clear);
+                    Optional<Goal<Agent>> targetGoal = agent.getGoal(GoalTypes.TARGET);
+                    targetGoal.ifPresent(Goal::clear);
+                }
                 configureAITasks(agent, request.getAITasksList());
-            } catch (InvalidProtocolBufferException | NoSuchFieldException | IllegalAccessException e) {
-                //TODO: handle this
-                e.printStackTrace();
+            } catch (NoSuchElementException e) {
+                this.plugin.getLogger().info(e.getMessage());
+                responseObserver.onError(Status.NOT_FOUND.withDescription("No entity with the given UUID").asException());
+            } catch (Exception e) {
+                this.plugin.getLogger().info(e.getMessage());
+                responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).asException());
             }
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
         }).name("updateEntityAI").submit(plugin);
     }
 
-    private void configureAITasks(Agent agent, List<AITask> tasks) throws InvalidProtocolBufferException, NoSuchFieldException, IllegalAccessException {
+    private void configureAITasks(Agent agent, List<AITask> tasks) throws InvalidProtocolBufferException {
+        //All agents have both goal types, so this will never result in an error
         Goal<Agent> normalGoal = agent.getGoal(GoalTypes.NORMAL).get();
-        //TODO: maybe things dont always have target goals
         Goal<Agent> targetGoal = agent.getGoal(GoalTypes.TARGET).get();
         for (AITask task: tasks) {
             if(task.getTask().is(AITask_Idle.class)){
@@ -167,12 +169,14 @@ public class EntityService extends EntityServiceImplBase {
                 normalGoal.addTask(task.getPriority(), buildWatchClosestTypeTask(agent, watchClosest));
             }else if(task.getTask().is(AITask_AttackLiving.class)){
                 AITask_AttackLiving attackLiving = task.getTask().unpack(AITask_AttackLiving.class);
-                //TODO: throw proper errors if things aren't creatures
                 normalGoal.addTask(task.getPriority(), buildAttackLivingAITask((Creature) agent, attackLiving));
-            }else if(task.getTask().is(AITask_AvoidEntity.class)){
-                AITask_AvoidEntity avoidEntity = task.getTask().unpack(AITask_AvoidEntity.class);
-                normalGoal.addTask(task.getPriority(), buildAvoidEntityAITask((Creature) agent, avoidEntity));
-            }else if(task.getTask().is(AITask_RangeAgent.class)){
+            }else if(task.getTask().is(AITask_AvoidEntityTypes.class)){
+                AITask_AvoidEntityTypes avoidEntity = task.getTask().unpack(AITask_AvoidEntityTypes.class);
+                normalGoal.addTask(task.getPriority(), buildAvoidEntityTypesAITask((Creature) agent, avoidEntity));
+            } else if(task.getTask().is(AITask_AvoidSpecificEntities.class)){
+                AITask_AvoidSpecificEntities avoidEntity = task.getTask().unpack(AITask_AvoidSpecificEntities.class);
+                normalGoal.addTask(task.getPriority(), buildAvoidSpecificEntitiesTask((Creature) agent, avoidEntity));
+            } else if(task.getTask().is(AITask_RangeAgent.class)){
                 AITask_RangeAgent rangeAgent = task.getTask().unpack(AITask_RangeAgent.class);
                 normalGoal.addTask(task.getPriority(), buildRangeAgentAITask((Ranger) agent, rangeAgent));
             }else if(task.getTask().is(AITask_Wander.class)){
@@ -181,6 +185,9 @@ public class EntityService extends EntityServiceImplBase {
             }else if(task.getTask().is(AITask_FindNearestTarget.class)){
                 AITask_FindNearestTarget findNearestTarget = task.getTask().unpack(AITask_FindNearestTarget.class);
                 targetGoal.addTask(task.getPriority(), buildFindNearestTarget((Creature) agent, findNearestTarget));
+            }else if(task.getTask().is(AITask_FindSpecificTarget.class)){
+                AITask_FindSpecificTarget findSpecificTarget = task.getTask().unpack(AITask_FindSpecificTarget.class);
+                targetGoal.addTask(task.getPriority(), buildFindSpecificTargets((Creature) agent, findSpecificTarget));
             } else {
                 throw new RuntimeException("AI Task not recognised");
             }
@@ -191,8 +198,7 @@ public class EntityService extends EntityServiceImplBase {
         return LookIdleAITask.builder().build(agent);
     }
 
-    private WatchClosestAITask buildWatchClosestTypeTask (Agent agent, AITask_WatchClosest task) throws NoSuchFieldException, IllegalAccessException {
-        //TODO: Fix this monstrosity
+    private WatchClosestAITask buildWatchClosestTypeTask (Agent agent, AITask_WatchClosest task) {
         return WatchClosestAITask.builder()
                 .chance(task.getChance())
                 .maxDistance(task.getMaxDistance())
@@ -209,13 +215,30 @@ public class EntityService extends EntityServiceImplBase {
        return newTaskBuilder.build(agent);
     }
 
-    private AvoidEntityAITask buildAvoidEntityAITask(Creature agent, AITask_AvoidEntity task) {
+    private AvoidEntityAITask buildAvoidEntityTypesAITask(Creature agent, AITask_AvoidEntityTypes task) {
         List<org.spongepowered.api.entity.EntityType> types = task.getEntityTypeList().stream().map(this::rpcEntityTypeToSpongeEntityType).collect(Collectors.toList());
-        //TODO: what happens if list is empty?
         List<Predicate<Entity>> predicates = types.stream().map(n -> new Predicate<Entity>() {
             @Override
             public boolean test(Entity entity) {
                 return entity.getType() == n;
+            }
+        }).collect(Collectors.toList());
+        Predicate<Entity> targetSelector = predicates.stream().reduce(x->false, Predicate::or);
+
+        return AvoidEntityAITask.builder()
+                .closeRangeSpeed(task.getCloseRangeSpeed())
+                .farRangeSpeed(task.getFarRangeSpeed())
+                .searchDistance(task.getSearchDistance())
+                .targetSelector(targetSelector)
+                .build(agent);
+    }
+
+    private AvoidEntityAITask buildAvoidSpecificEntitiesTask(Creature agent, AITask_AvoidSpecificEntities task){
+        List<String> uuids = task.getUuidsList();
+        List<Predicate<Entity>> predicates = uuids.stream().map(n -> new Predicate<Entity>() {
+            @Override
+            public boolean test(Entity entity) {
+                return entity.getUniqueId().toString().equals(n);
             }
         }).collect(Collectors.toList());
         Predicate<Entity> targetSelector = predicates.stream().reduce(x->false, Predicate::or);
@@ -244,10 +267,32 @@ public class EntityService extends EntityServiceImplBase {
     }
 
     private FindNearestAttackableTargetAITask buildFindNearestTarget(Creature agent, AITask_FindNearestTarget task){
-        //TODO: figure out the difference between filter and target class
         FindNearestAttackableTargetAITask.Builder builder = FindNearestAttackableTargetAITask.builder()
                 .chance(task.getChance())
                 .target(rpcEntityTypeToSpongeEntityType(task.getTargetEntity()).getEntityClass().asSubclass(Living.class));
+
+        if(task.getOnlyNearby())
+            builder.onlyNearby();
+        if(task.getShouldCheckSight())
+            builder.checkSight();
+
+        return builder.build(agent);
+    }
+
+    private FindNearestAttackableTargetAITask buildFindSpecificTargets(Creature agent, AITask_FindSpecificTarget task){
+        List<String> uuids = task.getUuidsList();
+        List<Predicate<Living>> predicates = uuids.stream().map(n -> new Predicate<Living>() {
+            @Override
+            public boolean test(Living entity) {
+                return entity.getUniqueId().toString().equals(n);
+            }
+        }).collect(Collectors.toList());
+        Predicate<Living> targetSelector = predicates.stream().reduce(x->false, Predicate::or);
+
+        FindNearestAttackableTargetAITask.Builder builder = FindNearestAttackableTargetAITask.builder()
+                .chance(task.getChance())
+                .filter(targetSelector)
+                .target(Living.class);
 
         if(task.getOnlyNearby())
             builder.onlyNearby();
@@ -261,7 +306,6 @@ public class EntityService extends EntityServiceImplBase {
         try {
             return (org.spongepowered.api.entity.EntityType) EntityTypes.class.getField(type.toString().split("_", 2)[1]).get(null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            //TODO: do error logging
             throw new RuntimeException("This can only happen if Sponge has changed the field names for entity types");
         }
     }

@@ -40,9 +40,26 @@ def attackExample():
 
     entityClient.updateEntityAI(EntityAIUpdate(uuid=uuid, resetGoals=True, AITasks=[AITask(priority=0,task=target), AITask(priority=0, task=attack)]))
 
+#A spider that only attacks one specific sheep
+def attackSpecificExample():
+    uuids = entityClient.spawnEntities(SpawnEntities(spawnEntities=[
+        SpawnEntity(type=ENTITY_SPIDER, spawnPosition=Point(x=2, y=5, z=-3)),
+        SpawnEntity(type=ENTITY_SHEEP, spawnPosition=Point(x=4, y=5, z=-3)),
+        SpawnEntity(type=ENTITY_SHEEP, spawnPosition=Point(x=1, y=5, z=-3))
+    ]))
+
+    uuid = uuids.uuids[0]
+    target = Any()
+    target.Pack(AITask_FindSpecificTarget(chance=100, uuids=[uuids.uuids[1]], onlyNearby=False, shouldCheckSight=True))
+
+    attack = Any()
+    attack.Pack(AITask_AttackLiving(speed=1, hasLongMemory=True))
+
+    entityClient.updateEntityAI(EntityAIUpdate(uuid=uuid, resetGoals=True, AITasks=[AITask(priority=0,task=target), AITask(priority=0, task=attack)]))
+
 
 #A sheep that runs away from spiders
-def avoidExample():
+def avoidTypesExample():
     uuids = entityClient.spawnEntities(SpawnEntities(spawnEntities=[
         SpawnEntity(type=ENTITY_SPIDER, spawnPosition=Point(x=2, y=5, z=-3)),
         SpawnEntity(type=ENTITY_SHEEP, spawnPosition=Point(x=4, y=5, z=-3))
@@ -50,7 +67,20 @@ def avoidExample():
 
     uuid = uuids.uuids[1]
     run = Any()
-    run.Pack(AITask_AvoidEntity(closeRangeSpeed=5.0, farRangeSpeed=5.0, searchDistance=200.0, entityType=[ENTITY_SPIDER]))
+    run.Pack(AITask_AvoidEntityTypes(closeRangeSpeed=5.0, farRangeSpeed=5.0, searchDistance=200.0, entityType=[ENTITY_SPIDER]))
+
+    entityClient.updateEntityAI(EntityAIUpdate(uuid=uuid, resetGoals=True, AITasks=[AITask(priority=0,task=run)]))
+
+#A sheep that only runs away from a specific spider
+def avoidSpecificsExample():
+    uuids = entityClient.spawnEntities(SpawnEntities(spawnEntities=[
+        SpawnEntity(type=ENTITY_SPIDER, spawnPosition=Point(x=2, y=5, z=-3)),
+        SpawnEntity(type=ENTITY_SHEEP, spawnPosition=Point(x=4, y=5, z=-3))
+    ]))
+
+    uuid = uuids.uuids[1]
+    run = Any()
+    run.Pack(AITask_AvoidSpecificEntities(closeRangeSpeed=5.0, farRangeSpeed=5.0, searchDistance=200.0, uuids=[uuids.uuids[0]]))
 
     entityClient.updateEntityAI(EntityAIUpdate(uuid=uuid, resetGoals=True, AITasks=[AITask(priority=0,task=run)]))
 
