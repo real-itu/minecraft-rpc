@@ -6,6 +6,9 @@ import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableAttachedData;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableDirectionalData;
+import org.spongepowered.api.data.manipulator.mutable.block.AttachedData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.EventContextKeys;
@@ -223,24 +226,37 @@ public class MinecraftService extends MinecraftServiceImplBase {
     }
 
     public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
-        Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
-        if (!optionalData.isPresent()) {
-            throw new IllegalStateException("Failed to get block location data");
+        if(!blockLoc.getBlock().supports(ImmutableDirectionalData.class)){
+            throw new IllegalStateException("block type " + btype.toString() + " does not support orientation data");
         }
-        DirectionalData data = optionalData.get();
-        data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
-        BlockState state = btype.getDefaultState();
-        Optional<BlockState> newState = state.with(data.asImmutable());
-        if (!newState.isPresent()) {
-            throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
-        }
-        blockLoc.setBlock(newState.get());
+        BlockState bs = btype.getDefaultState();
+        DirectionalData direction = Sponge.getDataManager().getManipulatorBuilder(DirectionalData.class).get().create();
+        direction.set(direction.direction().set(Direction.valueOf(orientation.toString())));
+        BlockState newState = bs.with(direction.asImmutable()).get();
+
+        //Optional<DirectionalData> optionalData = blockLoc.getOrCreate(DirectionalData.class);
+        //if (!optionalData.isPresent()) {
+        //    throw new IllegalStateException("Failed to get block location data");
+        //}
+        //DirectionalData data = optionalData.get();
+        //data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
+        //blockLoc.offer(data);
+        //BlockState state = btype.getDefaultState();
+        //Optional<BlockState> newState = state.with(data.asImmutable());
+        //if (!newState.isPresent()) {
+        //    throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
+        //}
+        blockLoc.setBlock(newState);
     }
 
     private Orientation getOrientation(Location<World> blockLoc){
         Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
         if(!optionalData.isPresent()){
             return null;
+        }
+        Optional<AttachedData> at = blockLoc.get(AttachedData.class);
+        if(at.isPresent()){
+            System.out.println(at.get().attached().get());
         }
         DirectionalData data = optionalData.get();
         return Orientation.valueOf(data.direction().get().name());
