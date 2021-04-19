@@ -178,7 +178,9 @@ public class MinecraftService extends MinecraftServiceImplBase {
                                                 .setZ(z)
                                                 .build()
                                         )
-                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
+                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name)))
+                                        .setOrientation(getOrientation(world.getLocation(x,y,z))).build());
+
                             }
                         }
                     }
@@ -230,6 +232,15 @@ public class MinecraftService extends MinecraftServiceImplBase {
             throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
         }
         blockLoc.setBlock(newState.get());
+    }
+
+    private Orientation getOrientation(Location<World> blockLoc){
+        Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
+        if(!optionalData.isPresent()){
+            return null;
+        }
+        DirectionalData data = optionalData.get();
+        return Orientation.valueOf(data.direction().toString());
     }
 
 }
