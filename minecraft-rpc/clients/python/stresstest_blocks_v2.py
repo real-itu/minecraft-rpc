@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import time
+import sys
 
 import grpc
 
@@ -11,7 +12,8 @@ import minecraft_pb2_grpc
 from minecraft_pb2 import *
 
 servers = []
-ip = "35.158.138.94"
+ip = sys.argv[4]
+#ip = "35.158.138.94"
 
 x = 100
 y = 3 
@@ -74,9 +76,11 @@ def spawnCubesOnServer(server, cubes, blockType, t):
         timeSamples.append(cTook)
         print(cTook)
 
-
-amountOfServers = int(input("How many servers do you want duplicated with these lag machines? format: c\n"))
-cubesCount = int(input("How many cubes pr. server? \n"))
+amountOfServers = int(sys.argv[1])
+cubesCount = int(sys.argv[2])
+nmax = int(sys.argv[3])
+#amountOfServers = int(input("How many servers do you want duplicated with these lag machines? format: c\n"))
+#cubesCount = int(input("How many cubes pr. server? \n"))
 
 print("Processing ...")
 
@@ -94,21 +98,29 @@ for i in range(len(servers)):
 
 b = True
 n = 1
-while n < 151:
-    cube1 = Cube(min=Point(x=x+1, y=y, z=z+1), max=Point(x=x+1+(n-1), y=y+n-1, z=z+1+(n-1)))
-    cube2 = Cube(min=Point(x=x-1, y=y, z=z-1), max=Point(x=x-1-(n-1), y=y+n-1, z=z-1-(n-1)))
-    cube3 = Cube(min=Point(x=x-1, y=y, z=z+1), max=Point(x=x-1-(n-1), y=y+n-1, z=z+1+(n-1)))
-    cube4 = Cube(min=Point(x=x+1, y=y, z=z-1), max=Point(x=x+1+(n-1), y=y+n-1, z=z-1-(n-1)))
+try:
+    while n < nmax:
+        cube1 = Cube(min=Point(x=x+1, y=y, z=z+1), max=Point(x=x+1+(n-1), y=y+n-1, z=z+1+(n-1)))
+        cube2 = Cube(min=Point(x=x-1, y=y, z=z-1), max=Point(x=x-1-(n-1), y=y+n-1, z=z-1-(n-1)))
+        cube3 = Cube(min=Point(x=x-1, y=y, z=z+1), max=Point(x=x-1-(n-1), y=y+n-1, z=z+1+(n-1)))
+        cube4 = Cube(min=Point(x=x+1, y=y, z=z-1), max=Point(x=x+1+(n-1), y=y+n-1, z=z-1-(n-1)))
 
 
-    cubes = []
-    if(cubesCount == 1): cubes = [cube1]
-    if(cubesCount == 2): cubes = [cube1, cube2]
-    if(cubesCount == 3): cubes = [cube1, cube2, cube3]
-    if(cubesCount == 4): cubes = [cube1, cube2, cube3, cube4]
-    for server in servers:
-        print(n)
-        sendCommand(server, "say "+ str(n))
-        spawnCubesOnServer(server, cubes, OBSIDIAN, True)
-        spawnCubesOnServer(server, cubes, AIR, False)
-    n += 1
+        cubes = []
+        if(cubesCount == 1): cubes = [cube1]
+        if(cubesCount == 2): cubes = [cube1, cube2]
+        if(cubesCount == 3): cubes = [cube1, cube2, cube3]
+        if(cubesCount == 4): cubes = [cube1, cube2, cube3, cube4]
+        for server in servers:
+            print(n)
+            sendCommand(server, "say "+ str(n))
+            spawnCubesOnServer(server, cubes, OBSIDIAN, True)
+            spawnCubesOnServer(server, cubes, AIR, False)
+        n += 1
+except:
+    print(sys.exc_info()[0])
+
+for server in servers:
+    sendCommand(server, "stop")
+time.sleep(2)
+
