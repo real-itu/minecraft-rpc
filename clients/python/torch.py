@@ -8,8 +8,8 @@ client = minecraft_pb2_grpc.MinecraftServiceStub(channel)
 
 client.spawnBlocks(Blocks(blocks=[  # Spawn a flying machine
     # Lower layer
-    Block(position=Point(x=1, y=4, z=1), type=DIRT, orientation=NORTH),
-   # Block(position=Point(x=2, y=4, z=1), type=REDSTONE_TORCH, orientation=NORTH),
+    Block(position=Point(x=1, y=4, z=1), type=PISTON, orientation=SOUTH),
+    Block(position=Point(x=2, y=4, z=1), type=REDSTONE_TORCH, orientation=NORTH),
 ]))
 
 x=client.readCube(Cube(min=Point(x=0,y=0,z=0), max=Point(x=2,y=6,z=2)))

@@ -171,15 +171,18 @@ public class MinecraftService extends MinecraftServiceImplBase {
                         for (int y = min.getY(); y <= max.getY(); y++) {
                             for (int z = min.getZ(); z <= max.getZ(); z++) {
                                 String name = world.getLocation(x, y, z).getBlock().getType().getName();
-                                builder.addBlocks(Block.newBuilder()
+                                Block.Builder blockBuilder = Block.newBuilder()
                                         .setPosition(Point.newBuilder()
                                                 .setX(x)
                                                 .setY(y)
                                                 .setZ(z)
                                                 .build()
                                         )
-                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name)))
-                                        .setOrientation(getOrientation(world.getLocation(x,y,z))).build());
+                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name)));
+                                if(getOrientation(world.getLocation(x,y,z)) != null){
+                                    blockBuilder.setOrientation(getOrientation(world.getLocation(x,y,z)));
+                                }
+                                builder.addBlocks(blockBuilder.build());
 
                             }
                         }
@@ -240,7 +243,7 @@ public class MinecraftService extends MinecraftServiceImplBase {
             return null;
         }
         DirectionalData data = optionalData.get();
-        return Orientation.valueOf(data.direction().toString());
+        return Orientation.valueOf(data.direction().get().name());
     }
 
 }
