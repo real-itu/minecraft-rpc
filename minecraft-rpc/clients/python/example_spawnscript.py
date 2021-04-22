@@ -4,11 +4,11 @@ import grpc
 import sys
 sys.path.insert(1, '../../server')
 
-from .. import minecraft_pb2_grpc
-from .. minecraft_pb2 import *
+import minecraft_pb2_grpc
+from minecraft_pb2 import *
 
 ip = "localhost"
-rpcPort = "5001"
+rpcPort = "____"
 
 channel = grpc.insecure_channel(ip+':'+rpcPort)
 client = minecraft_pb2_grpc.MinecraftServiceStub(channel)

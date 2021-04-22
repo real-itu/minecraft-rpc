@@ -12,10 +12,12 @@ A [gRPC](https://grpc.io) interface for Minecraft
 
 - Run docker
 - Go to `minecraft-rpc/server` and start the server delegator with `python server_delegator.py`
-- You can start the servers with the example `python example_multi_server_spawn.py` in `minecraft-rpc/clients/python`
+- You can start the servers with the example `python example_multi_server_spawn.py`* in `minecraft-rpc/clients/python` 
 - You will now be prompted for how many servers you wish to spawn
 - Dockers containers will now start to spawn, one for each server.
 - When the servers are finished initializing, their gRPC and minecraft ports will be printed.
+
+*It is possible to change the startup parameters for the server on line 33. World type can both be specified as FLAT, which will generate a completely flat level and as DEFAULT which will generate a normal level. MaxHeapSize dictates how much memory in mb each server is allowed.
 
 ### Calling the server
 
