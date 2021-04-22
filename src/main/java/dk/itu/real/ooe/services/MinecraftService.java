@@ -6,6 +6,8 @@ import dk.itu.real.ooe.Minecraft.*;
 import dk.itu.real.ooe.MinecraftServiceGrpc.MinecraftServiceImplBase;
 import io.grpc.stub.StreamObserver;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableAttachedData;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableDirectionalData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.EventContextKeys;
@@ -66,10 +68,8 @@ public class MinecraftService extends MinecraftServiceImplBase {
                             BlockType blockType = (BlockType) BlockTypes.class.getField(block.getType().toString()).get(null);
                             Point pos = block.getPosition();
                             Orientation orientation = block.getOrientation();
-                            world.setBlockType(pos.getX(), pos.getY(), pos.getZ(), blockType);
-                            if (blockType.getDefaultState().supports(Keys.DIRECTION)) {
-                                setOrientation(world.getLocation(pos.getX(), pos.getY(), pos.getZ()), orientation, blockType);
-                            }
+                            BlockState blockState = createBlockState(blockType, orientation);
+                            world.setBlock(pos.getX(), pos.getY(), pos.getZ(), blockState);
                         } catch (IllegalStateException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ){
                             this.plugin.getLogger().info(e.getMessage());
                         }
@@ -114,7 +114,6 @@ public class MinecraftService extends MinecraftServiceImplBase {
                 Optional<Entity> entityOption = world.getEntity(UUID.fromString(id));
                 if(!entityOption.isPresent()){
                     builder.addEntities(Minecraft.Entity.newBuilder()
-                        //Proto ignores defualt values so there is no need to set type, position and isloaded
                         .setId(id)).build();
                 } else {
                     org.spongepowered.api.entity.Entity entity = entityOption.get();
@@ -171,14 +170,19 @@ public class MinecraftService extends MinecraftServiceImplBase {
                         for (int y = min.getY(); y <= max.getY(); y++) {
                             for (int z = min.getZ(); z <= max.getZ(); z++) {
                                 String name = world.getLocation(x, y, z).getBlock().getType().getName();
-                                builder.addBlocks(Block.newBuilder()
+                                Block.Builder blockBuilder = Block.newBuilder()
                                         .setPosition(Point.newBuilder()
                                                 .setX(x)
                                                 .setY(y)
                                                 .setZ(z)
                                                 .build()
                                         )
-                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name))).build());
+                                        .setType(Minecraft.BlockType.valueOf(blockNamesToBlockTypes.get(name)));
+                                if(getOrientation(world.getLocation(x,y,z)) != null){
+                                    blockBuilder.setOrientation(getOrientation(world.getLocation(x,y,z)));
+                                }
+                                builder.addBlocks(blockBuilder.build());
+
                             }
                         }
                     }
@@ -217,19 +221,25 @@ public class MinecraftService extends MinecraftServiceImplBase {
         ).name("fillCube").submit(plugin);
     }
 
-    public void setOrientation(Location<World> blockLoc, Orientation orientation, BlockType btype) throws IllegalStateException{
+    private BlockState createBlockState(BlockType blockType, Orientation orientation) {
+        BlockState state = blockType.getDefaultState();
+        BlockState.Builder stateBuilder = BlockState.builder().from(state);
+        if(blockType.getDefaultState().supports(ImmutableDirectionalData.class)){
+            stateBuilder.add(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
+        }
+        if(blockType.getDefaultState().supports(ImmutableAttachedData.class)){
+            stateBuilder.add(Keys.ATTACHED, true);
+        }
+        return stateBuilder.build();
+    }
+
+    private Orientation getOrientation(Location<World> blockLoc){
         Optional<DirectionalData> optionalData = blockLoc.get(DirectionalData.class);
-        if (!optionalData.isPresent()) {
-            throw new IllegalStateException("Failed to get block location data");
+        if(!optionalData.isPresent()){
+            return null;
         }
         DirectionalData data = optionalData.get();
-        data.set(Keys.DIRECTION, Direction.valueOf(orientation.toString()));
-        BlockState state = btype.getDefaultState();
-        Optional<BlockState> newState = state.with(data.asImmutable());
-        if (!newState.isPresent()) {
-            throw new IllegalStateException("block type " + btype.toString() + " failed to set orientation!");
-        }
-        blockLoc.setBlock(newState.get());
+        return Orientation.valueOf(data.direction().get().name());
     }
 
 }
