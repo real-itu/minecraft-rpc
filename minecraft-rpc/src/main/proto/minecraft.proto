@@ -1,0 +1,447 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package dk.itu.real.ooe;
+
+/**
+  The main service.
+*/
+service MinecraftService {
+    /** Spawn multiple blocks. */
+    rpc spawnBlocks (Blocks) returns (google.protobuf.Empty);
+    
+    /** Reads multiple entities **/
+    rpc readEntities (Uuids) returns (Entities);
+
+    /** Spawn multiple entities. */
+    rpc spawnEntities (SpawnEntities) returns (Uuids);
+
+    /** Return all blocks in a cube */
+    rpc readCube (Cube) returns (Blocks);
+
+    /** Fill a cube with a block type */
+    rpc fillCube (FillCubeRequest) returns (google.protobuf.Empty);
+
+    rpc readEntitiesInSphere(Sphere) returns (Entities);  
+}
+
+/** A 3D cube defined by two opposing corners min and max where min.x < max.x, min.y < max.y and min.z < max.z */
+message Cube {
+    Point min = 1;
+    Point max = 2;
+}
+
+message Sphere {
+    Point center = 1;
+    double radius = 2;
+}
+
+/** A request to fill the cube with the block type */
+message FillCubeRequest {
+    Cube cube = 1;
+    BlockType type = 2;
+}
+
+/** Multiple blocks */
+message Blocks {
+    repeated Block blocks = 1;
+}
+
+/** A point in 3D space */
+message Point {
+    int32 x = 1;
+    int32 y = 2;
+    int32 z = 3;
+}
+
+/** A single block */
+message Block {
+    Point position = 1;
+    BlockType type = 2;
+    Orientation orientation = 3;
+}
+
+/** An orientation in 3D space. */
+enum Orientation {
+    NORTH = 0;
+    WEST = 1;
+    SOUTH = 2;
+    EAST = 3;
+    UP = 4;
+    DOWN = 5;
+}
+
+message Uuids {
+    repeated string uuids = 1;
+}
+
+message SpawnEntities {
+    repeated SpawnEntity spawnEntities = 1;
+}
+
+message SpawnEntity {
+    EntityType type = 1;
+    Point spawnPosition = 2;
+}
+
+message Entities {
+    repeated Entity entities = 1;
+}
+
+/** A single entity */
+message Entity {
+    string id = 1;
+    EntityType type = 2;
+    Point position = 3;
+    bool isLoaded = 4;
+}
+
+/** A block type. To get the corresponding Minecraft id name, lowercase and append "minecraft:", e.g. "minecraft:acacia_door" */
+enum BlockType {
+    ACACIA_DOOR = 0;
+    ACACIA_FENCE = 1;
+    ACACIA_FENCE_GATE = 2;
+    ACACIA_STAIRS = 3;
+    ACTIVATOR_RAIL = 4;
+    AIR = 5;
+    ANVIL = 6;
+    BARRIER = 7;
+    BEACON = 8;
+    BED = 9;
+    BEDROCK = 10;
+    BEETROOTS = 11;
+    BIRCH_DOOR = 12;
+    BIRCH_FENCE = 13;
+    BIRCH_FENCE_GATE = 14;
+    BIRCH_STAIRS = 15;
+    BLACK_GLAZED_TERRACOTTA = 16;
+    BLACK_SHULKER_BOX = 17;
+    BLUE_GLAZED_TERRACOTTA = 18;
+    BLUE_SHULKER_BOX = 19;
+    BONE_BLOCK = 20;
+    BOOKSHELF = 21;
+    BREWING_STAND = 22;
+    BRICK_BLOCK = 23;
+    BRICK_STAIRS = 24;
+    BROWN_GLAZED_TERRACOTTA = 25;
+    BROWN_MUSHROOM = 26;
+    BROWN_MUSHROOM_BLOCK = 27;
+    BROWN_SHULKER_BOX = 28;
+    CACTUS = 29;
+    CAKE = 30;
+    CARPET = 31;
+    CARROTS = 32;
+    CAULDRON = 33;
+    CHAIN_COMMAND_BLOCK = 34;
+    CHEST = 35;
+    CHORUS_FLOWER = 36;
+    CHORUS_PLANT = 37;
+    CLAY = 38;
+    COAL_BLOCK = 39;
+    COAL_ORE = 40;
+    COBBLESTONE = 41;
+    COBBLESTONE_WALL = 42;
+    COCOA = 43;
+    COMMAND_BLOCK = 44;
+    CONCRETE = 45;
+    CONCRETE_POWDER = 46;
+    CRAFTING_TABLE = 47;
+    CYAN_GLAZED_TERRACOTTA = 48;
+    CYAN_SHULKER_BOX = 49;
+    DARK_OAK_DOOR = 50;
+    DARK_OAK_FENCE = 51;
+    DARK_OAK_FENCE_GATE = 52;
+    DARK_OAK_STAIRS = 53;
+    DAYLIGHT_DETECTOR = 54;
+    DAYLIGHT_DETECTOR_INVERTED = 55;
+    DEADBUSH = 56;
+    DETECTOR_RAIL = 57;
+    DIAMOND_BLOCK = 58;
+    DIAMOND_ORE = 59;
+    DIRT = 60;
+    DISPENSER = 61;
+    DOUBLE_PLANT = 62;
+    DOUBLE_STONE_SLAB = 63;
+    DOUBLE_STONE_SLAB2 = 64;
+    DOUBLE_WOODEN_SLAB = 65;
+    DRAGON_EGG = 66;
+    DROPPER = 67;
+    EMERALD_BLOCK = 68;
+    EMERALD_ORE = 69;
+    ENCHANTING_TABLE = 70;
+    ENDER_CHEST = 71;
+    END_BRICKS = 72;
+    END_GATEWAY = 73;
+    END_PORTAL = 74;
+    END_PORTAL_FRAME = 75;
+    END_ROD = 76;
+    END_STONE = 77;
+    FARMLAND = 78;
+    FENCE = 79;
+    FENCE_GATE = 80;
+    FIRE = 81;
+    FLOWER_POT = 82;
+    FLOWING_LAVA = 83;
+    FLOWING_WATER = 84;
+    FROSTED_ICE = 85;
+    FURNACE = 86;
+    GLASS = 87;
+    GLASS_PANE = 88;
+    GLOWSTONE = 89;
+    GOLDEN_RAIL = 90;
+    GOLD_BLOCK = 91;
+    GOLD_ORE = 92;
+    GRASS = 93;
+    GRASS_PATH = 94;
+    GRAVEL = 95;
+    GRAY_GLAZED_TERRACOTTA = 96;
+    GRAY_SHULKER_BOX = 97;
+    GREEN_GLAZED_TERRACOTTA = 98;
+    GREEN_SHULKER_BOX = 99;
+    HARDENED_CLAY = 100;
+    HAY_BLOCK = 101;
+    HEAVY_WEIGHTED_PRESSURE_PLATE = 102;
+    HOPPER = 103;
+    ICE = 104;
+    IRON_BARS = 105;
+    IRON_BLOCK = 106;
+    IRON_DOOR = 107;
+    IRON_ORE = 108;
+    IRON_TRAPDOOR = 109;
+    JUKEBOX = 110;
+    JUNGLE_DOOR = 111;
+    JUNGLE_FENCE = 112;
+    JUNGLE_FENCE_GATE = 113;
+    JUNGLE_STAIRS = 114;
+    LADDER = 115;
+    LAPIS_BLOCK = 116;
+    LAPIS_ORE = 117;
+    LAVA = 118;
+    LEAVES = 119;
+    LEAVES2 = 120;
+    LEVER = 121;
+    LIGHT_BLUE_GLAZED_TERRACOTTA = 122;
+    LIGHT_BLUE_SHULKER_BOX = 123;
+    LIGHT_WEIGHTED_PRESSURE_PLATE = 124;
+    LIME_GLAZED_TERRACOTTA = 125;
+    LIME_SHULKER_BOX = 126;
+    LIT_FURNACE = 127;
+    LIT_PUMPKIN = 128;
+    LIT_REDSTONE_LAMP = 129;
+    LIT_REDSTONE_ORE = 130;
+    LOG = 131;
+    LOG2 = 132;
+    MAGENTA_GLAZED_TERRACOTTA = 133;
+    MAGENTA_SHULKER_BOX = 134;
+    MAGMA = 135;
+    MELON_BLOCK = 136;
+    MELON_STEM = 137;
+    MOB_SPAWNER = 138;
+    MONSTER_EGG = 139;
+    MOSSY_COBBLESTONE = 140;
+    MYCELIUM = 141;
+    NETHERRACK = 142;
+    NETHER_BRICK = 143;
+    NETHER_BRICK_FENCE = 144;
+    NETHER_BRICK_STAIRS = 145;
+    NETHER_WART = 146;
+    NETHER_WART_BLOCK = 147;
+    NOTEBLOCK = 148;
+    OAK_STAIRS = 149;
+    OBSERVER = 150;
+    OBSIDIAN = 151;
+    ORANGE_GLAZED_TERRACOTTA = 152;
+    ORANGE_SHULKER_BOX = 153;
+    PACKED_ICE = 154;
+    PINK_GLAZED_TERRACOTTA = 155;
+    PINK_SHULKER_BOX = 156;
+    PISTON = 157;
+    PISTON_EXTENSION = 158;
+    PISTON_HEAD = 159;
+    PLANKS = 160;
+    PORTAL = 161;
+    POTATOES = 162;
+    POWERED_COMPARATOR = 163;
+    POWERED_REPEATER = 164;
+    PRISMARINE = 165;
+    PUMPKIN = 166;
+    PUMPKIN_STEM = 167;
+    PURPLE_GLAZED_TERRACOTTA = 168;
+    PURPLE_SHULKER_BOX = 169;
+    PURPUR_BLOCK = 170;
+    PURPUR_DOUBLE_SLAB = 171;
+    PURPUR_PILLAR = 172;
+    PURPUR_SLAB = 173;
+    PURPUR_STAIRS = 174;
+    QUARTZ_BLOCK = 175;
+    QUARTZ_ORE = 176;
+    QUARTZ_STAIRS = 177;
+    RAIL = 178;
+    REDSTONE_BLOCK = 179;
+    REDSTONE_LAMP = 180;
+    REDSTONE_ORE = 181;
+    REDSTONE_TORCH = 182;
+    REDSTONE_WIRE = 183;
+    RED_FLOWER = 184;
+    RED_GLAZED_TERRACOTTA = 185;
+    RED_MUSHROOM = 186;
+    RED_MUSHROOM_BLOCK = 187;
+    RED_NETHER_BRICK = 188;
+    RED_SANDSTONE = 189;
+    RED_SANDSTONE_STAIRS = 190;
+    RED_SHULKER_BOX = 191;
+    REEDS = 192;
+    REPEATING_COMMAND_BLOCK = 193;
+    SAND = 194;
+    SANDSTONE = 195;
+    SANDSTONE_STAIRS = 196;
+    SAPLING = 197;
+    SEA_LANTERN = 198;
+    SILVER_GLAZED_TERRACOTTA = 199;
+    SILVER_SHULKER_BOX = 200;
+    SKULL = 201;
+    SLIME = 202;
+    SNOW = 203;
+    SNOW_LAYER = 204;
+    SOUL_SAND = 205;
+    SPONGE = 206;
+    SPRUCE_DOOR = 207;
+    SPRUCE_FENCE = 208;
+    SPRUCE_FENCE_GATE = 209;
+    SPRUCE_STAIRS = 210;
+    STAINED_GLASS = 211;
+    STAINED_GLASS_PANE = 212;
+    STAINED_HARDENED_CLAY = 213;
+    STANDING_BANNER = 214;
+    STANDING_SIGN = 215;
+    STICKY_PISTON = 216;
+    STONE = 217;
+    STONEBRICK = 218;
+    STONE_BRICK_STAIRS = 219;
+    STONE_BUTTON = 220;
+    STONE_PRESSURE_PLATE = 221;
+    STONE_SLAB = 222;
+    STONE_SLAB2 = 223;
+    STONE_STAIRS = 224;
+    STRUCTURE_BLOCK = 225;
+    STRUCTURE_VOID = 226;
+    TALLGRASS = 227;
+    TNT = 228;
+    TORCH = 229;
+    TRAPDOOR = 230;
+    TRAPPED_CHEST = 231;
+    TRIPWIRE = 232;
+    TRIPWIRE_HOOK = 233;
+    UNLIT_REDSTONE_TORCH = 234;
+    UNPOWERED_COMPARATOR = 235;
+    UNPOWERED_REPEATER = 236;
+    VINE = 237;
+    WALL_BANNER = 238;
+    WALL_SIGN = 239;
+    WATER = 240;
+    WATERLILY = 241;
+    WEB = 242;
+    WHEAT = 243;
+    WHITE_GLAZED_TERRACOTTA = 244;
+    WHITE_SHULKER_BOX = 245;
+    WOODEN_BUTTON = 246;
+    WOODEN_DOOR = 247;
+    WOODEN_PRESSURE_PLATE = 248;
+    WOODEN_SLAB = 249;
+    WOOL = 250;
+    YELLOW_FLOWER = 251;
+    YELLOW_GLAZED_TERRACOTTA = 252;
+    YELLOW_SHULKER_BOX = 253;
+}
+
+enum EntityType {
+    ENTITY_AREA_EFFECT_CLOUD=0;
+    ENTITY_ARMOR_STAND=1;
+    ENTITY_BAT=2;
+    ENTITY_BLAZE=3;
+    ENTITY_BOAT=4;
+    ENTITY_CAVE_SPIDER=5;
+    ENTITY_CHESTED_MINECART=6;
+    ENTITY_CHICKEN=7;
+    ENTITY_COMMANDBLOCK_MINECART=8;
+    ENTITY_COMPLEX_PART=9;
+    ENTITY_COW=10;
+    ENTITY_CREEPER=11;
+    ENTITY_DONKEY=12;
+    ENTITY_DRAGON_FIREBALL=13;
+    ENTITY_EGG=14;
+    ENTITY_ELDER_GUARDIAN=15;
+    ENTITY_ENDER_CRYSTAL=16;
+    ENTITY_ENDER_DRAGON=17;
+    ENTITY_ENDER_PEARL=18;
+    ENTITY_ENDERMAN=19;
+    ENTITY_ENDERMITE=20;
+    ENTITY_EVOCATION_FANGS=21;
+    ENTITY_EVOCATION_ILLAGER=22;
+    ENTITY_EXPERIENCE_ORB=23;
+    ENTITY_EYE_OF_ENDER=24;
+    ENTITY_FALLING_BLOCK=25;
+    ENTITY_FIREBALL=26;
+    ENTITY_FIREWORK=27;
+    ENTITY_FISHING_HOOK=28;
+    ENTITY_FURNACE_MINECART=29;
+    ENTITY_GHAST=30;
+    ENTITY_GIANT=31;
+    ENTITY_GUARDIAN=32;
+    ENTITY_HOPPER_MINECART=33;
+    ENTITY_HORSE=34;
+    ENTITY_HUMAN=35;
+    ENTITY_HUSK=36;
+    ENTITY_ILLUSION_ILLAGER=37;
+    ENTITY_IRON_GOLEM=38;
+    ENTITY_ITEM=39;
+    ENTITY_ITEM_FRAME=40;
+    ENTITY_LEASH_HITCH=41;
+    ENTITY_LIGHTNING=42;
+    ENTITY_LLAMA=43;
+    ENTITY_LLAMA_SPIT=44;
+    ENTITY_MAGMA_CUBE=45;
+    ENTITY_MOB_SPAWNER_MINECART=46;
+    ENTITY_MULE=47;
+    ENTITY_MUSHROOM_COW=48;
+    ENTITY_OCELOT=49;
+    ENTITY_PAINTING=50;
+    ENTITY_PARROT=51;
+    ENTITY_PIG=52;
+    ENTITY_PIG_ZOMBIE=53;
+    ENTITY_PLAYER=54;
+    ENTITY_POLAR_BEAR=55;
+    ENTITY_PRIMED_TNT=56;
+    ENTITY_RABBIT=57;
+    ENTITY_RIDEABLE_MINECART=58;
+    ENTITY_SHEEP=59;
+    ENTITY_SHULKER=60;
+    ENTITY_SHULKER_BULLET=61;
+    ENTITY_SILVERFISH=62;
+    ENTITY_SKELETON=63;
+    ENTITY_SKELETON_HORSE=64;
+    ENTITY_SLIME=65;
+    ENTITY_SMALL_FIREBALL=66;
+    ENTITY_SNOWBALL=67;
+    ENTITY_SNOWMAN=68;
+    ENTITY_SPECTRAL_ARROW=69;
+    ENTITY_SPIDER=70;
+    ENTITY_SPLASH_POTION=71;
+    ENTITY_SQUID=72;
+    ENTITY_STRAY=73;
+    ENTITY_THROWN_EXP_BOTTLE=74;
+    ENTITY_TIPPED_ARROW=75;
+    ENTITY_TNT_MINECART=76;
+    ENTITY_UNKNOWN=77;
+    ENTITY_VEX=78;
+    ENTITY_VILLAGER=79;
+    ENTITY_VINDICATION_ILLAGER=80;
+    ENTITY_WEATHER=81;
+    ENTITY_WITCH=82;
+    ENTITY_WITHER=83;
+    ENTITY_WITHER_SKELETON=84;
+    ENTITY_WITHER_SKULL=85;
+    ENTITY_WOLF=86;
+    ENTITY_ZOMBIE=87;
+    ENTITY_ZOMBIE_HORSE=88;
+    ENTITY_ZOMBIE_VILLAGER=89;
+}
